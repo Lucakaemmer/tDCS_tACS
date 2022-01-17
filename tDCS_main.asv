@@ -54,6 +54,8 @@ for i = 1:(length(Trials))
     clear next_duration;
 end
 
+Trial_type = repmat('trial_type', length(Duration), 1); 
+
 %%% Putting together the Design Matrix
 Design = [Timing', Duration', Trials]; 
            
@@ -221,8 +223,8 @@ for i=1:length(Design)
         Screen('Flip', window)
     end
     
-    %%% Adding information to log file (RT, accuracy, etc.)
-    Log_File(i,13) = GetSecs - start_run;
+    % Adding information to log file (RT, accuracy, etc.)
+    Log_File(i,13) = 
 end
 
 
@@ -248,7 +250,6 @@ end
 % 10: Second stimulus presented after delay (target or foil)
 % 11: Correct test stimulus
 % 12: Inter-Trial-Interval
-% 13: Real time since the start of the experiment
 
 
           
