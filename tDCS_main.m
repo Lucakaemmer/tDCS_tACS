@@ -70,16 +70,17 @@ Design = [Timing', Duration', Trials];
 % 10: Correct test stimulus
 % 11: Inter-Trial-Interval
 
+clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials_catch_noWM stim_name wmdelay ;
 
 %---------------
 % Log File
 %---------------
 
 % Creating the log file to be filled during the experiment
-Trial_type = repmat("trial_type", length(Duration), 1);
-Log_File = [Timing', Duration', Trial_type, Trials];
-
-clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials_catch_noWM stim_name wmdelay ;
+fileID = fopen(['Outputs/Log_File.tsv'],'w');       %' num2str(clock) ' add later
+formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
+labels = ["Trial Onset" "Trial Duration" "Trial Type" "Sample 1" "Sample 2" "Memory Cue" "Remembered Sample" "WM Delay" "Presented Stimulus 1" "Presented Stimulus 2" "Correct Stimulus" "ITI" "Timing"];
+fprintf(fileID, formatSpec, labels);
 
 
 %% *******************************************************************
@@ -136,7 +137,8 @@ start_run = GetSecs;
 for i=1:length(Design)
 %i = 1 %for debugging
 
-    % Exact starttime of each trial. Includes 8s waiting period before first trials and ITI after each trial
+    % Exact starttime of each trial. Includes 8s waiting period before
+    % first trials and ITI after each trial (str2num(Log_File(i,1))/1000)
     while GetSecs < start_run + (Design(i,1)/1000)
             Screen('Textstyle', window, 0)
             DrawFormattedText(window, '+', 'center', 'center', white)
@@ -194,10 +196,15 @@ for i=1:length(Design)
     end
 
     % Presentation of foil/target stimulus
+%     while toc < 10.55
+%         download stimulus
+%     end
+    
     while toc < 10.7 
         Screen('Textstyle', window, 1)
         DrawFormattedText(window, '+', 'center', 'center', white)
         Screen('Flip', window)
+%         start stimulation
     end
     
     % Pause
@@ -220,20 +227,16 @@ for i=1:length(Design)
         DrawFormattedText(window, '?', 'center', 'center', white)
         Screen('Flip', window)
     end
-    
-    %%% Adding information to log file (RT, accuracy, etc.)
-    Log_File(i,13) = GetSecs - start_run;
+        
+    %%% Writing log file in .tsv file
+    timing = GetSecs - start_run;
+    log = [Design(i,1:2) "trial type" Design(i,3:11) timing];
+    fprintf(fileID, formatSpec, log);
+   
 end
 
-
-
-
-%% ----------------------------
-% Writing out log file as .tsv
-%------------------------------
-
-%%% Writing log file in .tsv file
-%writematrix(Log_File, 'Outputs/Log_File.tsv', 'FileType', 'text', 'Delimiter', '\t')
+% Closing the log file
+fclose(fileID);
 
 %%% Log File
 % 1: Trial_onset time
