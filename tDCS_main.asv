@@ -135,7 +135,7 @@ KbName('UnifyKeyNames');
 
 escapeKey = KbName('ESCAPE');
 first = KbName('1!');
-second = KbName('2@');
+second = KbName('2"');
 
 
 
@@ -266,15 +266,12 @@ for i=1:length(Design)
         end    
     end
         
-    %% Results
-    if keypress == Design(i,10)
-        response = "correct"
-    else
-        response = "incorrect"
-    end
-    timing = GetSecs - start_run;
-    
     %%% Writing log file in .tsv format
+    if keypress == Design(
+        response = correct
+    else
+        response = incorrect
+    timing = GetSecs - start_run;
     log = [Design(i,1:2) "trial type" Design(i,3:11) timing keypress response];
     fprintf(fileID, formatSpec, log);
    

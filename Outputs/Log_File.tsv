@@ -1,0 +1,3 @@
+Trial Onset	Trial Duration	Trial Type	Sample 1	Sample 2	Memory Cue	Remembered Sample	WM Delay	Presented Stimulus 1	Presented Stimulus 2	Correct Stimulus	ITI	Timing	Keypress	Response
+8000	13000	trial type	4	1	2	1	6500	117	1	2	2000	20.119	1	incorrect
+23000	13000	trial type	3	1	2	1	6500	142	1	2	4000	35.1541	2	incorrect
