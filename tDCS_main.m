@@ -150,7 +150,7 @@ for i=1:length(Design)
 %i = 1 %for debugging
 
     % Exact starttime of each trial. Includes 8s waiting period before
-    % first trials and ITI after each trial (str2num(Log_File(i,1))/1000)
+    % first trials and ITI after each trial
     while GetSecs < start_run + (Design(i,1)/1000)
             Screen('Textstyle', window, 0)
             DrawFormattedText(window, '+', 'center', 'center', white)
