@@ -282,7 +282,7 @@ for i=1:length(Design)
     elseif keypress == 99
         response = "late"
         Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '? ?', 'center', 'center', white)
+        DrawFormattedText(window, '- -', 'center', 'center', white)
         Screen('Flip', window)
     else
         response = "incorrect"
@@ -290,7 +290,6 @@ for i=1:length(Design)
         DrawFormattedText(window, '- -', 'center', 'center', white)
         Screen('Flip', window)
     end
-    WaitSecs(1) % feedback presented for 1 second
     
     timing = GetSecs - start_run; 
     
