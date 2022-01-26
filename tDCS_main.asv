@@ -1,7 +1,7 @@
 %% *******************************************************************
 %                       DESIGN MATRIX
 %*********************************************************************
-clear all, clc
+clear, clc
 
 % There is a set of 4 Stimuli named: 1 2 3 4
 
@@ -77,9 +77,9 @@ clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials
 %---------------
 
 % Creating the log file to be filled during the experiment
-fileID = fopen(['Outputs/Log_File.tsv'],'w');       %' num2str(clock) ' add later
-formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
-labels = ["Trial Onset" "Trial Duration" "Trial Type" "Sample 1" "Sample 2" "Memory Cue" "Remembered Sample" "WM Delay" "Presented Stimulus 1" "Presented Stimulus 2" "Correct Stimulus" "ITI" "Timing" "Keypress" "Response" "RT"];
+fileID = fopen(['Outputs/Log_File.tsv'],'w');       %' num2str(clock) ' add later   also add run name 
+formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
+labels = ["Trial Onset" "Trial Duration" "Trial Type" "Sample 1" "Sample 2" "Memory Cue" "Remembered Sample" "WM Delay" "Presented Stimulus 1" "Presented Stimulus 2" "Correct Stimulus" "ITI" "Timing" "Keypress" "Response" "Too late" "RT"];
 fprintf(fileID, formatSpec, labels);
 
 
@@ -148,154 +148,197 @@ start_run = GetSecs;
 
 for i=1:length(Design)
 %i = 1 %for debugging
-
-    % Exact starttime of each trial. Includes 8s waiting period before
-    % first trials and ITI after each trial
+    
+    % Exact starttime of each trial. Includes 8s waiting period before first trials and ITI after each trial
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
     while GetSecs < start_run + (Design(i,1)/1000)
-            Screen('Textstyle', window, 0)
-            DrawFormattedText(window, '+', 'center', 'center', white)
-            Screen('Flip', window)
     end
     
+    % tracks actual starttime of each trial
+    timing = GetSecs - start_run;
     % Starting the internal clock that times each trial
-    tic; 
+    tic;
     
-    % Presentation of sample 1
+%     % Downloading stimulus 1
 %     while toc < 0.55
-%         download stimulus
 %     end
+%     download stimulus
+
+    %% Trial
+    % Presentation of sample 1
+    trial_timing(i,1) = toc; % keeping track of the timing within the trial by recording the time at which a new screen is presented 
+    Screen('Textstyle', window, 1);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
+%     start stimulation
     while toc < 0.7 
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
-%         start stimulation
     end
     
     % Pause 
+    trial_timing(i,2) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
     while toc < 1
-        Screen('Textstyle', window, 0)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
     end
     
-    % Presentation of sample 2
+%     % Downloading stimulus 2
 %     while toc < 1.55
 %         download stimulus
 %     end
+
+    % Presentation of sample 2
+    trial_timing(i,3) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 1);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
+%     start stimulation
     while toc < 1.7
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
-%         start stimulation
     end
 
     % Pause
+    trial_timing(i,4) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
     while toc < 2
-        Screen('Textstyle', window, 0)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
     end
     
     % Presentation of memory cue
-    while toc < 2.5
-        Screen('Textstyle', window, 0)
-        if Design(i,5) == 1 
-            DrawFormattedText(window, '1', 'center', 'center', white)
-            Screen('Flip', window)
-        elseif Design(i,5) == 2
-            DrawFormattedText(window, '2', 'center', 'center', white)
-            Screen('Flip', window)
-        end        
+    trial_timing(i,5) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 0);
+    if Design(i,5) == 1 
+        DrawFormattedText(window, '1', 'center', 'center', white);
+        Screen('Flip', window);
+    elseif Design(i,5) == 2
+        DrawFormattedText(window, '2', 'center', 'center', white);
+        Screen('Flip', window);
+    end 
+    while toc < 2.5       
     end
 
     % Waiting period
+    trial_timing(i,6) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
     while toc < 10
-        Screen('Textstyle', window, 0)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
     end
 
     % Presentation of foil/target stimulus
 %     while toc < 10.55
 %         download stimulus
 %     end
+
+    % Presentation of foil/target stimulus
+    trial_timing(i,7) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 1);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
+%     start stimulation
     while toc < 10.7 
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
-%         start stimulation
     end
     
-    % Pause
+    % Pause 
+    trial_timing(i,8) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
     while toc < 11
-        Screen('Textstyle', window, 0)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
     end
     
-    % Presentation of target/foil stimulus
+    % Downloading target/foil stimulus
 %     while toc < 11.55
 %         download stimulus
 %     end
+
+    % Presentation of target/foil stimulus
+    trial_timing(i,9) = toc; % keeping track of the timing within the trial
+    Screen('Textstyle', window, 1);
+    DrawFormattedText(window, '+', 'center', 'center', white);
+    Screen('Flip', window);
+%     start stimulation
     while toc < 11.7 
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '+', 'center', 'center', white)
-        Screen('Flip', window)
-%         start stimulation
     end
     
     %for RT
     pres_t = GetSecs;
     
     %% Response
+    % Presentation of response screen
+    trial_timing(i,10) = toc; % keeping track of the timing within the trial
     respToBeMade = true;
+    Screen('Textstyle', window, 0);
+    DrawFormattedText(window, '?', 'center', 'center', white);
+    Screen('Flip', window);
     while toc < 13.2  && respToBeMade == true
         [keyIsDown, secs, keyCode] = KbCheck;
-        Screen('Textstyle', window, 0)
-        DrawFormattedText(window, '?', 'center', 'center', white)
-        Screen('Flip', window)
         if keyCode(escapeKey)
             ShowCursor;
             sca;
             return
         elseif keyCode(first)
             keypress = 1;
+            too_late = 0;
             respToBeMade = false;
         elseif keyCode(second)
             keypress = 2;
+            too_late = 0;
             respToBeMade = false;
         else
             keypress = 99;
+            too_late = 1;
         end    
     end
     
     %RT
-    RT = GetSecs - pres_t;
+    if too_late == 0
+        RT = GetSecs - pres_t;
+    elseif too_late == 1
+        RT = NaN;
+    end
 
         
     %% Results and Feedback
     if keypress == Design(i,10)
-        response = "correct"
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '+ +', 'center', 'center', white)
-        Screen('Flip', window)
+        response = 1; %correct
+        Screen('Textstyle', window, 0);
+        DrawFormattedText(window, '+ + +', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(1) % feedback presented for 1 second
     elseif keypress == 99
-        response = "late"
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '- -', 'center', 'center', white)
-        Screen('Flip', window)
+        response = 0; %too late
+        Screen('Textstyle', window, 1);
+        DrawFormattedText(window, 'x x', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(0.2) % feedback presented for 1 second
+                DrawFormattedText(window, 'x x', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(0.2) % feedback presented for 1 second
+                DrawFormattedText(window, 'x x', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(0.2) % feedback presented for 1 second
+                DrawFormattedText(window, 'x x', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(0.2) % feedback presented for 1 second
+                DrawFormattedText(window, 'x x', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(0.2) % feedback presented for 1 second
     else
-        response = "incorrect"
-        Screen('Textstyle', window, 1)
-        DrawFormattedText(window, '- -', 'center', 'center', white)
-        Screen('Flip', window)
+        response = 0; %incorrect
+        Screen('Textstyle', window, 0);
+        DrawFormattedText(window, '- + -', 'center', 'center', white);
+        Screen('Flip', window);
+        WaitSecs(1) % feedback presented for 1 second
     end
-    
-    timing = GetSecs - start_run; 
-    
+     
     %%% Writing log file in .tsv format
-    log = [Design(i,1:2) "trial type" Design(i,3:11) timing keypress response RT];
+    log = [Design(i,1:2) "trial type" Design(i,3:11) timing keypress response too_late RT];
     fprintf(fileID, formatSpec, log);
+    
+    trial_timing(i,11) = toc; % keeping track of the timing within the trial
    
 end
 
