@@ -4,7 +4,7 @@
 clear, clc
 
 % There is a set of 4 Stimuli named: 1 2 3 4
-
+122122112211
 %%% General Settings
 initial_pause = 8000;   % in ms
 wmdelay      = 6500;  % in ms
@@ -359,6 +359,11 @@ fclose(fileID);
 % 11: Correct test stimulus
 % 12: Inter-Trial-Interval
 % 13: Real time since the start of the experiment
+
+% Ending the experiment
+ShowCursor;
+sca;
+return
 
 
           
