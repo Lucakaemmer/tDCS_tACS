@@ -1,10 +1,22 @@
 %% *******************************************************************
-%                       DESIGN MATRIX
+%                       PREPARE WORKSPACE
 %*********************************************************************
 clear, clc
+rand('state',sum(100*clock));
+
+% Name of the participant
+part = ('felix_test_tDCS');
+
+Tstart = clock;
+timestamp = [num2str(Tstart(4)) 'h' num2str(Tstart(5)) 'm'];
+
+
+
+%% *******************************************************************
+%                       DESIGN MATRIX
+%*********************************************************************
 
 % There is a set of 4 Stimuli named: 1 2 3 4
-122122112211
 %%% General Settings
 initial_pause = 8000;   % in ms
 wmdelay      = 6500;  % in ms
@@ -77,11 +89,10 @@ clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials
 %---------------
 
 % Creating the log file to be filled during the experiment
-fileID = fopen(['Outputs/Log_File.tsv'],'w');       %' num2str(clock) ' add later   also add run name 
+fileID = fopen(['C:/tDCS_TWMD/Outputs/' part '_' timestamp '_Log_File.tsv'],'w'); %opens a file for each participant. Also includes time.
 formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
-labels = ["Trial Onset" "Trial Duration" "Trial Type" "Sample 1" "Sample 2" "Memory Cue" "Remembered Sample" "WM Delay" "Presented Stimulus 1" "Presented Stimulus 2" "Correct Stimulus" "ITI" "Timing" "Keypress" "Response" "Too late" "RT"];
-fprintf(fileID, formatSpec, labels);
-
+labels = {'Trial Onset' 'Trial Duration' 'Trial Type' 'Sample 1' 'Sample 2' 'Memory Cue' 'Remembered Sample' 'WM Delay' 'Presented Stimulus 1' 'Presented Stimulus 2' 'Correct Stimulus' 'ITI' 'Timing' 'Keypress' 'Response' 'Too late' 'RT'};
+fprintf(fileID, formatSpec, labels{:});
 
 %% *******************************************************************
 %                            SCREEN
@@ -96,7 +107,7 @@ PsychDefaultSetup(2);
  
 % Get the screen numbers
 screens = Screen('Screens');
- 
+
 % Select the external screen if it is present, else revert to the native
 % screen
 screenNumber = max(screens);
@@ -107,7 +118,7 @@ white = WhiteIndex(screenNumber);
 grey = white / 2;
  
 % Open an on screen window and color it grey
-[window, windowRect] = PsychImaging('OpenWindow', screenNumber, grey);
+[window, windowRect] =  Screen('OpenWindow', screenNumber, grey);
  
 % Set the blend funciton for the screen
 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
@@ -140,6 +151,24 @@ second = KbName('2@');
 
 
 %% *******************************************************************
+%                            Stimulator
+%*********************************************************************
+addpath('C:\tDCS_TWMD\QuaeroBox');
+cd ('C:\tDCS_TWMD')
+load('sub001_tDCS_TWMD_Stimuli.mat');
+
+% Initiation of Stimulator
+initQuaeroBox;
+prepare_stimulator;
+reset_stimulator;
+
+%Stimulator settings 
+dt=1;
+load_stim_dur = 0.29;
+load_stim_dur_mask = 0.23;
+
+
+%% *******************************************************************
 %                        Experimental Loop
 %*********************************************************************
 
@@ -149,64 +178,70 @@ start_run = GetSecs;
 for i=1:length(Design)
 %i = 1 %for debugging
     
+    % Downloading stimulus 1
+    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,3)}(:,:,(1:2:end)),dt,0);
+
     % Exact starttime of each trial. Includes 8s waiting period before first trials and ITI after each trial
     Screen('Textstyle', window, 0);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-    while GetSecs < start_run + (Design(i,1)/1000)
+    while GetSecs < start_run + (Design(i,1)/1000) - load_stim_dur
     end
-    
-    % tracks actual starttime of each trial
-    timing = GetSecs - start_run;
-    % Starting the internal clock that times each trial
-    tic;
-    
-%     % Downloading stimulus 1
-%     while toc < 0.55
-%     end
-%     download stimulus
+
 
     %% Trial
-    % Presentation of sample 1
-    trial_timing(i,1) = toc; % keeping track of the timing within the trial by recording the time at which a new screen is presented 
+    % tracks actual starttime of each trial
+    timing = GetSecs - start_run + load_stim_dur;
+    
+    % Presentation of stimulus 
+    startStim;   
+    tic; % Starting the internal clock that times each trial
+    trial_timing(i,1) = toc; % keeping track of the timing within the trial by recording the time at which a new screen is presented
     Screen('Textstyle', window, 1);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-%     start stimulation
+    stopStim;     
     while toc < 0.7 
     end
+
     
     % Pause 
     trial_timing(i,2) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-    while toc < 1
+    
+    
+    % Downloading stimulus 2
+    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,4)}(:,:,(1:2:end)),dt,0);
+    while toc < 1 - load_stim_dur
     end
     
-%     % Downloading stimulus 2
-%     while toc < 1.55
-%         download stimulus
-%     end
-
-    % Presentation of sample 2
+    % Presentation of stimulus 2
+    startStim;       
     trial_timing(i,3) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 1);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-%     start stimulation
+    stopStim;
     while toc < 1.7
     end
+
 
     % Pause
     trial_timing(i,4) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-    while toc < 2
-    end
     
-    % Presentation of memory cue
+    
+    % Downloading mask
+    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.mask(:,:,(1:2:end)),dt,0);
+    while toc < 2.0 - load_stim_dur_mask
+    end
+        
+    % Presentation of memory cue and mask
+    startStim;     
     trial_timing(i,5) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
     if Design(i,5) == 1 
@@ -215,56 +250,69 @@ for i=1:length(Design)
     elseif Design(i,5) == 2
         DrawFormattedText(window, '2', 'center', 'center', white);
         Screen('Flip', window);
-    end 
+    end
+    stopStim;
     while toc < 2.5       
     end
 
+    
     % Waiting period
     trial_timing(i,6) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-    while toc < 10
+     
+    
+    % Downloading foil/target Stimulus
+    if Design(i,8) < 100
+        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,8)}(:,:,(1:2:1400)),dt,0);
+    else
+        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.alternative{fix(Design(i,8)/100),mod(Design(i,8),100)}(:,:,(1:2:1400)),dt,0);
+    end
+    while toc < 10 - load_stim_dur
     end
 
     % Presentation of foil/target stimulus
-%     while toc < 10.55
-%         download stimulus
-%     end
-
-    % Presentation of foil/target stimulus
+    startStim; 
     trial_timing(i,7) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 1);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-%     start stimulation
+    stopStim;
     while toc < 10.7 
     end
+    
     
     % Pause 
     trial_timing(i,8) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-    while toc < 11
-    end
+    
     
     % Downloading target/foil stimulus
-%     while toc < 11.55
-%         download stimulus
-%     end
+    if Design(i,9) < 100
+        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,9)}(:,:,(1:2:1400)),dt,0);
+    else
+        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.alternative{fix(Design(i,9)/100),mod(Design(i,9),100)}(:,:,(1:2:1400)),dt,0);
+    end
+    while toc < 11 - load_stim_dur
+    end
 
     % Presentation of target/foil stimulus
-    trial_timing(i,9) = toc; % keeping track of the timing within the trial
+    startStim; 
+    trial_timing(i,9) = toc; % keeping track of the timing within the trial11122121
     Screen('Textstyle', window, 1);
     DrawFormattedText(window, '+', 'center', 'center', white);
     Screen('Flip', window);
-%     start stimulation
+    stopStim;
     while toc < 11.7 
     end
     
+    
     %for RT
     pres_t = GetSecs;
+    
     
     %% Response
     % Presentation of response screen
@@ -297,7 +345,7 @@ for i=1:length(Design)
     if too_late == 0
         RT = GetSecs - pres_t;
     elseif too_late == 1
-        RT = "NaN";
+        RT = -1;
     end
 
         
@@ -335,12 +383,15 @@ for i=1:length(Design)
     end
      
     %%% Writing log file in .tsv format
-    log = [Design(i,1:2) "trial type" Design(i,3:11) timing keypress response too_late RT];
-    fprintf(fileID, formatSpec, log);
+    formatSpec = '%d\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n';
+    log = {Design(i,1) Design(i,2) 'trial type' Design(i,3) Design(i,4) Design(i,5) Design(i,6) Design(i,7) Design(i,8) Design(i,9) Design(i,10) string(Design(i,11)) timing keypress response too_late RT};
+    fprintf(fileID, formatSpec, log{:});
     
     trial_timing(i,11) = toc; % keeping track of the timing within the trial
-   
+    reset_stimulator;
 end
+
+close_stimulator;
 
 % Closing the log file
 fclose(fileID);
