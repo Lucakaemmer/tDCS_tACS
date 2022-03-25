@@ -5,7 +5,7 @@ clear, clc
 rand('state',sum(100*clock));
 
 % Name of the participant
-part = ('SJ05_tDCS_TWMD_sess2_run03'); %'Timo_tDCS_TWMD_sess1_train' 'Timo_tDCS_TWMD_sess1_run1'
+part = ('SJ05_tDCS_TWMD_sess2_run03');
 Tstart = clock;
 timestamp = [num2str(Tstart(4)) 'h' num2str(Tstart(5)) 'm'];
 
@@ -14,75 +14,89 @@ timestamp = [num2str(Tstart(4)) 'h' num2str(Tstart(5)) 'm'];
 %                       DESIGN MATRIX
 %*********************************************************************
 
-% There is a set of 4 Stimuli named: 1 2 3 4
 %%% General Settings
 initial_pause = 8000;   % in ms
 wmdelay      = 6500;  % in ms
 ITIs        = [2000 4000];   
 
-%%% Specification WM trials: all 24 possible combination of Trials and Cue
-Trials_wm = [1 1 1 2 2 2 3 3 3 4 4 4 1 1 1 2 2 2 3 3 3 4 4 4 ;  % Pattern_1
-             2 3 4 1 3 4 1 2 4 1 2 3 2 3 4 1 3 4 1 2 4 1 2 3 ;  % Pattern_2  
-             1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 ;  % Memory_Cue 
-             1 1 1 2 2 2 3 3 3 4 4 4 2 3 4 1 3 4 1 2 4 1 2 3 ;  % Remembered_pattern
-             repmat([wmdelay],1,24)                        ]';  % Delay             
 
-Trials_wm1 = [Trials_wm Trials_wm(:,4) Trials_wm(:,4)*100 ones(24,1)];
-          
-Trials_wm1(:,7) = Trials_wm1(:,7)+randsample(1:50,24,1)';
-          
-Trials_wm2 = [Trials_wm Trials_wm(:,4)*100 Trials_wm(:,4) ones(24,1)*2];
+% Randomly choosing a stimulus set that is presented in each trial
+stim_set = randperm(200,24)';
 
-Trials_wm2(:,6) = Trials_wm2(:,6)+randsample(1:50,24,1)';         
+% Randomly chooseing which stimulus is presented first in each trial (same as memory cue)
+presented_first = [(2*ones(1,12)),(ones(1,12))]';
+presented_first = presented_first(randperm(length(presented_first)));
 
-% Putting all Trials into one Matrix
-Trials_all = [Trials_wm1; Trials_wm2];
-
-%Assignment of ITI
-Trials_all(:,9) = [randsample(repmat(ITIs,1,(length(Trials_all)/length(ITIs))),length(Trials_all))]; % ITI assignment; 
-
-%Randomizing the order of the Trials
-trial_order = randperm(length(Trials_all));
-for i = 1:length(trial_order)
-    Trials(i,:) = Trials_all(trial_order(i),:);
+% Assigning which stimulus is presented second 
+presented_second = ones(24,1);
+for i = 1:length(presented_first)
+    if presented_first(i) == 1
+        presented_second(i) = 2;
+    end
 end
 
-clear i Trials_all trial_order Trials_wm Trials_catch Trials_wm1 Trials_wm2 delay_catch;
+% Randomly chooseing which stimulus is presented third (target or foil)
+presented_third = [(3*ones(1,12)),(ones(1,12))]';
+presented_third = presented_third(randperm(length(presented_third)));
 
-% Fast hack um nur 24 Trials zu haben bei gesamter Randomisierung
-Trials = Trials(1:24,:);
+% Assigning which stimulus is presented fourth 
+presented_fourth = ones(24,1);
+for i = 1:length(presented_third)
+    if presented_third(i) == 1
+        presented_fourth(i) = 3;
+    end
+end
 
+% Defining the WM delay for each trial
+Delay = repmat([wmdelay],1,24)';
+
+%Assignment of ITI
+ITI = [randsample(repmat(ITIs,1,(length(stim_set)/length(ITIs))),length(stim_set))]'; % ITI assignment; 
+
+% Assessing the onset of each trial
 Timing = [initial_pause];
-for i = 1:(length(Trials)-1)
-    next_onset = Timing(i) + 2500 + Trials(i,5) + 4000 + Trials(i,9); %Adding of time
+for i = 1:(length(stim_set)-1)
+    next_onset = Timing(i) + 2500 + Delay(i) + 4000 + ITI(i); %Adding of time
     Timing(i+1) = next_onset; 
     clear next_onset;
 end
+Timing = Timing';
 
-Duration = [];
-for i = 1:(length(Trials))
-    next_duration = 2500 + Trials(i,5) + 4000; %Adding of time
-    Duration(i) = next_duration; 
-    clear next_duration;
-end
+% Creating a vector with the duration of each trial
+Duration = (13000*ones(1,24))';
 
-%%% Putting together the Design Matrix
-Design = [Timing', Duration', Trials]; 
-           
-%%% Design Matrix
+
+%%% Putting it all in the design matrix
+Design = [Timing, Duration, stim_set, presented_first, presented_second, presented_third, presented_fourth, Delay, ITI];
+
+clear i Duration stim_set presented_first presented_second presented_third presented_fourth Delay ITI wmdelay ITIs initial_pause Timing
+
+%%% Design Matrix (new)
 % 1: Trial_onset time
 % 2: Trial Duration
-% 3: Vibration sample 1
-% 4: Vibration sample 2
-% 5: Memory cue to sample 1 or 2
-% 6: Sample that has to be remembered 
+% 3: Stimulus set used in the trial
+% 4: First stimulus presented (also memory cue)
+% 5: Second stimulus presented 
+% 6: Third stimulus presented
+% 7: Fourth stimulus presented
+% 8: WM Delay
+% 9: Inter-Trial-Interval
+
+
+%%% Design Matrix (old)
+% 1: Trial_onset time
+% 2: Trial Duration
+% 3: Vibration sample 1 ***
+% 4: Vibration sample 2 ***
+% 5: Memory cue to sample 1 or 2 ***
+% 6: Sample that has to be remembered ***
 % 7: WM delay
-% 8: First stimulus presented after delay (target or foil)
-% 9: Second stimulus presented after delay (target or foil)
-% 10: Correct test stimulus
+% 8: First stimulus presented after delay (target or foil) ***
+% 9: Second stimulus presented after delay (target or foil) ***
+% 10: Correct test stimulus ***
 % 11: Inter-Trial-Interval
 
-clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials_catch_noWM stim_name wmdelay ;
+clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials_catch_noWM stim_name wmdelay
 
 %---------------
 % Log File
