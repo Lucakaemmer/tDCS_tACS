@@ -60,8 +60,12 @@ t = 6;
 corr_stim = corrcoef(stimuli{t,1}, stimuli{t,2});
 corr_alt = corrcoef(stimuli{t,1}, stimuli{t,3});
 
+% Saving the created stimuli for use in the experiment
+save Stimuli_raw.mat stimuli
 
 clear del; clear i; clear repeats; clear x; clear t;
+
+
 
 
 
