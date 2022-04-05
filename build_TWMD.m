@@ -89,10 +89,52 @@ clear all
 
 
 
+tRes = 1; % Time resolution of the stimulus
+
+if isfield(stimulus,'stimfreq') 
+    stimfreq = stimulus.stimfreq;
+    stimdur = stimulus.stimdur;
+    if stimfreq == 0;
+    else
+        Carrier = zeros(1,1,nstep+1);
+        Carrier(1,1,:) = [(sin( (0:((((stimdur)./1000)*stimfreq)*2*pi)./((stimdur)./tRes):((((stimdur)./1000)*stimfreq)*2*pi) )+1)./2)]; % This function makes the sin function that you can plot
+        Carrier(1) = [];
+        Carrier = repmat(Carrier, [ResVDis,ResVDis,1])+0.5;
+        viDis = viDis.*Carrier;
+    end
+end
+
+plot()
 
 
 
 
+% loop über jeden Pin
+clear all
+pattern = [1 0.3 0.1 1;
+           1 0.3 0.1 1;
+           1 0.3 0.1 1;
+           1 0.3 0.1 1];
+stimulus = zeros(4,4,701);
+for i = 1:4
+    for j = 1:4
+        pinhub = pattern(i,j);
+        
+        rampdur = 100; % ramp in ms
+        modulation = [(0:pinhub/rampdur:pinhub) ones(1,499)*pinhub (pinhub:-pinhub/rampdur:0)];
+        
+        tRes = 1;
+        stimfreq = 30;
+        stimdur  = 700;
+        timecourse = [(sin( (0:((((stimdur)./1000)*stimfreq)*2*pi)./((stimdur)./tRes):((((stimdur)./1000)*stimfreq)*2*pi) )+1)./2)];
+        timecourse = timecourse + 0.5;
+        
+        stimulus(i,j,:) = modulation.*timecourse;
+        
+        clear pinhub;
+    end
+end
+plot(squeeze(stimulus(1,1,:))); hold on; plot(squeeze(stimulus(2,2,:)));
 
 
 
