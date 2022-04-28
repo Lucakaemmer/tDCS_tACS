@@ -21,7 +21,8 @@ ITIs        = [2000 4000];
 
 
 % Randomly choosing a stimulus set that is presented in each trial
-stim_set = randperm(200,24)';
+stim_set = randperm(200)';
+stim_set = stim_set(1:24);
 
 % Randomly chooseing which stimulus is presented first in each trial (same as memory cue)
 presented_first = [(2*ones(1,12)),(ones(1,12))]';
@@ -75,7 +76,7 @@ clear i Duration stim_set presented_first presented_second presented_third prese
 % 1: Trial_onset time
 % 2: Trial Duration
 % 3: Stimulus set used in the trial
-% 4: First stimulus presented (also memory cue)
+% 4: First stimulus presented (also memory cue and correct stimulus)
 % 5: Second stimulus presented 
 % 6: Third stimulus presented
 % 7: Fourth stimulus presented
@@ -104,8 +105,8 @@ clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials
 
 % Creating the log file to be filled during the experiment
 fileID = fopen(['C:/tDCS_TWMD/Outputs/' part '_' timestamp '_Log_File.tsv'],'w'); %opens a file for each participant. Also includes time.
-formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
-labels = {'Trial Onset' 'Trial Duration' 'Trial Type' 'Sample 1' 'Sample 2' 'Memory Cue' 'Remembered Sample' 'WM Delay' 'Presented Stimulus 1' 'Presented Stimulus 2' 'Correct Stimulus' 'ITI' 'Timing' 'Keypress' 'Response' 'Too late' 'RT'};
+formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
+labels = {'Trial Onset' 'Trial Duration' 'Trial Type' 'Stimulus Set' 'Stimulus 1' 'Stimulus 2' 'Stimulus 3' 'Stimulus 4' 'WM delay' 'ITI' 'Timing' 'Keypress' 'Response' 'Too late' 'RT'};
 fprintf(fileID, formatSpec, labels{:});
 
 %% *******************************************************************
@@ -169,7 +170,7 @@ second = KbName('2@');
 %*********************************************************************
 addpath('C:\tDCS_TWMD\QuaeroBox');
 cd ('C:\tDCS_TWMD')
-load('sub001_tDCS_TWMD_Stimuli.mat');
+load('Stimuli_transformed.mat');
 
 % Initiation of Stimulator
 initQuaeroBox;
@@ -190,10 +191,10 @@ load_stim_dur_mask = 0.23;
 start_run = GetSecs;
 
 for i=1:length(Design)
-%i = 1 %for debugging
+%i = 1; %for debugging
     
-    % Downloading stimulus 1
-    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,3)}(:,:,(1:2:end)),dt,0);
+    % Downloading stimulus 1, indexing stimulus set and first stimulus
+    t = download_stim2x8_TWMD(Stimuli_transformed.stimuli{Design(i,3),Design(i,4)},dt,0);
 
     % Exact starttime of each trial. Includes 8s waiting period before first trials and ITI after each trial
     Screen('Textstyle', window, 0);
@@ -226,8 +227,8 @@ for i=1:length(Design)
     Screen('Flip', window);
     
     
-    % Downloading stimulus 2
-    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,4)}(:,:,(1:2:end)),dt,0);
+    % Downloading stimulus 2, indexing stimulus set and first stimulus   
+    t = download_stim2x8_TWMD(Stimuli_transformed.stimuli{Design(i,3),Design(i,5)},dt,0);
     while toc < 1 - load_stim_dur
     end
     
@@ -250,7 +251,7 @@ for i=1:length(Design)
     
     
     % Downloading mask
-    t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.mask(:,:,(1:2:end)),dt,0);
+    t = download_stim2x8_TWMD(Stimuli_transformed.mask,dt,0);
     while toc < 2.0 - load_stim_dur_mask
     end
         
@@ -258,10 +259,10 @@ for i=1:length(Design)
     startStim;     
     trial_timing(i,5) = toc; % keeping track of the timing within the trial
     Screen('Textstyle', window, 0);
-    if Design(i,5) == 1 
+    if Design(i,4) == 1 
         DrawFormattedText(window, '1', 'center', 'center', white);
         Screen('Flip', window);
-    elseif Design(i,5) == 2
+    elseif Design(i,4) == 2
         DrawFormattedText(window, '2', 'center', 'center', white);
         Screen('Flip', window);
     end
@@ -277,12 +278,8 @@ for i=1:length(Design)
     Screen('Flip', window);
      
     
-    % Downloading foil/target Stimulus
-    if Design(i,8) < 100
-        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,8)}(:,:,(1:2:1400)),dt,0);
-    else
-        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.alternative{fix(Design(i,8)/100),mod(Design(i,8),100)}(:,:,(1:2:1400)),dt,0);
-    end
+    % Downloading foil/target Stimulus                            
+    t = download_stim2x8_TWMD(Stimuli_transformed.stimuli{Design(i,3),Design(i,6)},dt,0);
     while toc < 10 - load_stim_dur
     end
 
@@ -305,11 +302,7 @@ for i=1:length(Design)
     
     
     % Downloading target/foil stimulus
-    if Design(i,9) < 100
-        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.stimuli{Design(i,9)}(:,:,(1:2:1400)),dt,0);
-    else
-        t = download_stim2x8_TWMD(tDCS_TWMD_Stimuli.alternative{fix(Design(i,9)/100),mod(Design(i,9),100)}(:,:,(1:2:1400)),dt,0);
-    end
+    t = download_stim2x8_TWMD(Stimuli_transformed.stimuli{Design(i,3),Design(i,7)},dt,0);
     while toc < 11 - load_stim_dur
     end
 
@@ -364,7 +357,7 @@ for i=1:length(Design)
 
         
     %% Results and Feedback
-    if keypress == Design(i,10)  %correct
+    if keypress == Design(i,4)  %correct
         response = 1;
         Screen('Textstyle', window, 0);
         DrawFormattedText(window, '+ + +', 'center', 'center', white);
@@ -398,7 +391,7 @@ for i=1:length(Design)
      
     %%% Writing log file in .tsv format
     formatSpec = '%d\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n';
-    log = {Design(i,1) Design(i,2) 'trial type' Design(i,3) Design(i,4) Design(i,5) Design(i,6) Design(i,7) Design(i,8) Design(i,9) Design(i,10) string(Design(i,11)) timing keypress response too_late RT};
+    log = {Design(i,1) Design(i,2) 'trial type' Design(i,3) Design(i,4) Design(i,5) Design(i,6) Design(i,7) Design(i,8) Design(i,9) timing keypress response too_late RT};
     fprintf(fileID, formatSpec, log{:});
     
     trial_timing(i,11) = toc; % keeping track of the timing within the trial
@@ -414,16 +407,18 @@ fclose(fileID);
 % 1: Trial_onset time
 % 2: Trial Duration
 % 3: Trial Type
-% 4: Vibration sample 1
-% 5: Vibration sample 2
-% 6: Memory cue to sample 1 or 2
-% 7: Sample that has to be remembered 
-% 8: WM delay
-% 9: First stimulus presented after delay (target or foil)
-% 10: Second stimulus presented after delay (target or foil)
-% 11: Correct test stimulus
-% 12: Inter-Trial-Interval
-% 13: Real time since the start of the experiment
+% 4: Stimulus Set used in the Trial
+% 5: First Stimulus Presented (also memory cue and correct stimulus)
+% 6: Second Stimulus Presented
+% 7: Third Stimulus Presented 
+% 8: Fourth Stimulus Presented
+% 9: WM delay
+% 10: Inter-Trial-Interval
+% 11: Real time since the start of the experiment
+% 12: Keypress
+% 13: Response
+% 14: Was the participant too late
+% 15: Reaction Time
 
 % Ending the experiment
 ShowCursor;

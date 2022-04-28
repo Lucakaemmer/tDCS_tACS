@@ -28,9 +28,10 @@ stim2(repeats) = [];
 %% Chooseing the alternative stimuli with certain correlation to stim1
 
 % search for stimuli that have a specific correlation with stim1
+% maybe select all possible stimuli within range and then chose random one
 alt = [];
 for i = stim1'
-    x = find(CorMat(i,:)>0.7 & CorMat(i,:)<0.9,1);
+    x = find(CorMat(i,:)>0.6 & CorMat(i,:)<0.7,1);
     if isempty(x) == 1
         alt = [alt, 0];
     else

@@ -1,6 +1,9 @@
+% Clean Workspace
+clear; clc;
+
 %% Import .tsv log file 
-cd ('C:\Users\lucak\Documents\GitHub\tDCS_tACS\Outputs')
-log = tdfread('Log_File_example.tsv','\t');
+cd ('C:\tDCS_TWMD\Outputs')
+log = tdfread('LKtest_tDCS_TWMD_sess01_run01_11h44m_Log_File.tsv','\t');
 
 %%% Log File
 % 1: Trial_onset time
@@ -22,14 +25,31 @@ log = tdfread('Log_File_example.tsv','\t');
 %                        Data Analysis
 %*********************************************************************
 
+
+%%% Descriptives
+
 % Returns proportion of corrent responses
 performance = sum(log.Response==1) / length(log.Response);
 
-% Returns proportion of missed trials
-misses = sum(log.Too_late==1) / length(log.Too_late);
+% Returns number of missed trials
+misses = sum(log.Too_late==1);       % / length(log.Too_late);
 
 % Returns average RT
-RT = sum(log.RT) / length(log.RT); 
+RT = sum(log.RT(log.RT>=0)) / length(log.RT(log.RT>=0)); 
+
+% Comparing mean RT of correct versus incorrect trials
+RT_correct = mean(log.RT(log.Response == 1));
+RT_incorrect = mean(log.RT(log.RT>=0 & log.Response == 0));
+
+% Comparing performance of trials where first vs second stimulus had to be remembered
+performance_1 = sum(log.Response==1 & log.Stimulus_1==1) / sum(log.Stimulus_1==1);
+performance_2 = sum(log.Response==1 & log.Stimulus_1==2) / sum(log.Stimulus_1==2);
+
+
+
+
+% Checking the correlation
+% corrcoef(Stimuli_transformed.stimuli{30,1}(:,:,2),Stimuli_transformed.stimuli{30,3}(:,:,2))
 
 
 
