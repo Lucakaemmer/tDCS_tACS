@@ -2,8 +2,8 @@
 clear; clc;
 
 %% Import .tsv log file 
-cd ('C:\tDCS_TWMD\Outputs')
-log = tdfread('LKtest_tDCS_TWMD_sess01_run01_11h44m_Log_File.tsv','\t');
+cd ('C:\Users\lucak\Desktop\Uni\Berlin\Kurse\Semester 3\Internship_ReseachWorkshop\Data\SUB02')
+log = tdfread('SUB02_tDCS_TWMD_sess02_run06_stim00961_14h19m_Log_File','\t');
 
 %%% Log File
 % 1: Trial_onset time
