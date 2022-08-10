@@ -5,7 +5,7 @@ clear, clc
 rand('state',sum(100*clock));
 
 % Name of the participant
-part = ('FBtest_tDCS_TWMD_sess01_run01');
+part = ('SUB07_tDCS_TWMD_sess02_run00_stim');
 Tstart = clock;
 timestamp = [num2str(Tstart(4)) 'h' num2str(Tstart(5)) 'm'];
 
@@ -104,7 +104,7 @@ clear Timing initial_pause Duration Trial_type ITIs Trials i anfangspause Trials
 %---------------
 
 % Creating the log file to be filled during the experiment
-fileID = fopen(['C:/tDCS_TWMD/Outputs/' part '_' timestamp '_Log_File.tsv'],'w'); %opens a file for each participant. Also includes time.
+fileID = fopen(['D:\Psychtoolbox\Luca\tDCS_TWMD\Outputs\' part '_' timestamp '_Log_File.tsv'],'w'); %opens a file for each participant. Also includes time.
 formatSpec = '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n';
 labels = {'Trial Onset' 'Trial Duration' 'Trial Type' 'Stimulus Set' 'Stimulus 1' 'Stimulus 2' 'Stimulus 3' 'Stimulus 4' 'WM delay' 'ITI' 'Timing' 'Keypress' 'Response' 'Too late' 'RT'};
 fprintf(fileID, formatSpec, labels{:});
@@ -168,8 +168,8 @@ second = KbName('2@');
 %% *******************************************************************
 %                            Stimulator
 %*********************************************************************
-addpath('C:\tDCS_TWMD\QuaeroBox');
-cd ('C:\tDCS_TWMD')
+% addpath('D:\Psychtoolbox\Luca\tDCS_TWMD\Quaerobox');
+cd ('D:\Psychtoolbox\Luca\tDCS_TWMD')
 load('Stimuli_transformed.mat');
 
 % Initiation of Stimulator
