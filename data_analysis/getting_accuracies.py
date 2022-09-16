@@ -1,6 +1,6 @@
 import numpy as np
-from data_analysis.constants import (BOUNDS, DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
-from data_analysis.utils import (get_subjects_measure, import_data, shift_runs)
+from constants import (BOUNDS, DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
+from utils import (get_subjects_measure, import_data, shift_runs)
 
 
 # Importing data from all participants

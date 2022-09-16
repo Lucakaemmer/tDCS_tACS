@@ -4,7 +4,7 @@
 
 BOUNDS = [0, 24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288]
 
-DATA_PATH = "C:/Users/lucak/Desktop/Uni/Berlin/Kurse/Semester 3/InternshipReseachWorkshop/Data"
+DATA_PATH = "/Users/lucakammer/Documents/Academia/Uni_BerlinFU/Semester3/Master_Thesis/Data"
 
 COL_NAMES = ['Trial Onset', 'Trial Duration', 'Trial Type', 'Stimulus Set', 'Stimulus 1', 'Stimulus 2', 'Stimulus 3',
              'Stimulus 4', 'WM delay', 'ITI', 'Timing', 'Keypress', 'Response', 'Too late', 'RT']
@@ -20,8 +20,8 @@ EXCLUDE = [2, 3]
 #                                   Plotting
 # =============================================================================
 
-ACCURACIES_PATH = "C:/Users/lucak/Documents/GitHub/tDCS_tACS/data_analysis/accuracies.csv"
-RTs_PATH = "C:/Users/lucak/Documents/GitHub/tDCS_tACS/data_analysis/RTs.csv"
+ACCURACIES_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/accuracies.csv"
+RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/RTs.csv"
 
 RUNS_PLOT = [2.5, 4.5, 6.5, 8.5, 10.5]
 BLOCK_INDEXES = [0, 2, 4, 6, 8, 10]

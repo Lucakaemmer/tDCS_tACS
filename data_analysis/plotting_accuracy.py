@@ -1,6 +1,6 @@
 import pandas as pd
-from data_analysis.constants import (ACCURACIES_PATH)
-from data_analysis.utils import (graph_all_participants, get_mean_run_measure, graph_mean_run, get_mean_subj_measure,
+from constants import (ACCURACIES_PATH)
+from utils import (graph_all_participants, get_mean_run_measure, graph_mean_run, get_mean_subj_measure,
                                  barplot_mean_subject, get_mean_block_measure, barplot_mean_block, get_run_error,
                                  get_subj_error, get_block_error, graph_subj_run)
 

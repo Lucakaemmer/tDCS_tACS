@@ -62,7 +62,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/lucakammer/Documents/GitHub/tDCS_tACS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -140,6 +143,9 @@
       <module name="tDCS_tACS" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="C:\Users\lucak\anaconda3\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/data_analysis" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -203,6 +209,7 @@
       <workItem from="1658760807243" duration="512000" />
       <workItem from="1658934895906" duration="544000" />
       <workItem from="1660138760848" duration="1742000" />
+      <workItem from="1660156624164" duration="26000" />
     </task>
     <servers />
   </component>
