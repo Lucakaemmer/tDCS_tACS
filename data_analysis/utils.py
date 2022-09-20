@@ -14,13 +14,15 @@ from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CO
 
 def import_data(data_path, col_names):
     subject_folders = glob.glob(os.path.join(data_path, "SUB*"))
+    subject_folders = sorted(subject_folders)
     data_set = []
     for s in subject_folders:
         data_files = glob.glob(os.path.join(s, "*.tsv"))
+        data_files = sorted(data_files)
         data = pd.DataFrame(columns=col_names)
         for f in data_files:
             df = pd.read_csv(f, sep='\t')
-            data = data.append(df)
+            data = pd.concat([data, df])
         data_set.append(data)
     return data_set
 

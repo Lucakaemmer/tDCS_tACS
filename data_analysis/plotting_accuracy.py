@@ -19,7 +19,7 @@ run_error = get_run_error(measure=accuracies)
 graph_mean_run(mean_run_measure=mean_run_accuracies, run_error=run_error)
 
 # Plotting a graph of the accuracies of one single participant
-graph_subj_run(mean_run_measure=accuracies.iloc[13])
+#graph_subj_run(mean_run_measure=accuracies.iloc[13])
 
 
 
@@ -34,5 +34,3 @@ barplot_mean_subject(mean_subj_measure=mean_subj_accuracies, subj_error=subj_err
 mean_block_accuracies = get_mean_block_measure(measure=accuracies)
 block_error = get_block_error(measure=accuracies)
 barplot_mean_block(mean_block_measure=mean_block_accuracies, block_error=block_error)
-
-
