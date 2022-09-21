@@ -213,8 +213,8 @@ def plot_cond_measure(cond_measure):
     x_axis = np.arange(x)
     y = cond_measure
 
-    plt.bar(x_axis - 0.2, y[0], 0.4, label="remember Stimulus 1")
-    plt.bar(x_axis + 0.2, y[1], 0.4, label="remember Stimulus 2")
+    plt.bar(x_axis - 0.2, y[0], 0.4, label="Remember Stimulus 1")
+    plt.bar(x_axis + 0.2, y[1], 0.4, label="Remember Stimulus 2")
 
     x_axis = [x + 1 for x in x_axis]
     plt.xticks(range(x), x_axis)
