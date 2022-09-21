@@ -45,19 +45,14 @@ def get_subjects_measure(data, param, bounds):
     return subjects_measure
 
 
-def get_conditional_accuracy(data, bounds, condition):
-    acc_1 = []
-    acc_2 = []
+def get_conditional_accuracy(data, condition):
     n_subj = len(data)
     stim_1 = np.zeros(n_subj)
     stim_2 = np.zeros(n_subj)
     for subj in range(n_subj):
-        for bound in range(len(bounds) - 1):
-            lower_bound = bounds[bound]
-            upper_bound = bounds[bound + 1]
-            measure = data[subj][lower_bound:upper_bound]
-            acc_1.append(np.mean(measure.loc[measure[condition] == 1, 'Response']))
-            acc_2.append(np.mean(measure.loc[measure[condition] == 2, 'Response']))
+        measure = data[subj]
+        acc_1 = np.mean(measure.loc[measure[condition] == 1, 'Response'])
+        acc_2 = np.mean(measure.loc[measure[condition] == 2, 'Response'])
         stim_1[subj] = np.mean(acc_1)
         stim_2[subj] = np.mean(acc_2)
     return stim_1, stim_2

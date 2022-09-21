@@ -10,7 +10,7 @@ data_set = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
 participant_accuracies = get_subjects_measure(data=data_set, param="Response", bounds=BOUNDS)
 
 # Getting accuracies for correct stim first and correct stim second
-acc_1, acc_2 = get_conditional_accuracy(data=data_set, bounds=BOUNDS, condition='Stimulus 1')
+acc_1, acc_2 = get_conditional_accuracy(data=data_set, condition='Stimulus 1')
 cond_accuracies = np.c_[acc_1, acc_2]
 
 # Calculating mean RTs from all participants over the 12 runs
