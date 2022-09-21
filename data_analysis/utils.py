@@ -8,7 +8,7 @@ from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CO
 
 
 # =============================================================================
-#                           Computing Accuracies
+#                           Preprocessing
 # =============================================================================
 
 
@@ -40,9 +40,27 @@ def get_subjects_measure(data, param, bounds):
     n_subj = len(data)
     n_runs = len(bounds) - 1
     subjects_measure = np.zeros((n_subj, n_runs))
-    for subj in range(len(data)):
+    for subj in range(n_subj):
         subjects_measure[subj] = get_measure(data=data[subj], param=param, bounds=bounds)
     return subjects_measure
+
+
+def get_conditional_measure(data, bounds):
+    measure_1 = []
+    measure_2 = []
+    n_subj = len(data)
+    stim_1 = np.zeros(n_subj)
+    stim_2 = np.zeros(n_subj)
+    for subj in range(n_subj):
+        for bound in range(len(bounds) - 1):
+            lower_bound = bounds[bound]
+            upper_bound = bounds[bound + 1]
+            measure = data[subj][lower_bound:upper_bound]
+            measure_1.append(np.mean(measure.loc[measure['Stimulus 1'] == 1, 'Response']))
+            measure_2.append(np.mean(measure.loc[measure['Stimulus 1'] == 2, 'Response']))
+        stim_1[subj] = np.mean(measure_1)
+        stim_2[subj] = np.mean(measure_2)
+    return stim_1, stim_2
 
 
 def shift_runs(measure, stim_group_1):
@@ -181,7 +199,7 @@ def barplot_mean_block(mean_block_measure, block_error):
     plt.bar(x=range(len(x)), height=y)
     plt.errorbar(x=range(len(x)), y=y, yerr=block_error, ecolor="black", fmt=".", capsize=5)
     plt.xticks(range(len(x)), x)
-    plt.ylim(ymin=0, ymax=1)
+    plt.ylim(ymin=0, ymax=0.8)
     for i in range(len(y)):
         plt.text(x=range(len(x))[i] - 0.2, y=y[i] - 0.08, s=str(round(y[i], 2)), weight=TEXT_WEIGHT[2:][i])
     plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
@@ -190,4 +208,22 @@ def barplot_mean_block(mean_block_measure, block_error):
     return
 
 
+def plot_cond_measure(cond_measure):
+    x = len(cond_measure)
+    x_axis = np.arange(x)
+    y = cond_measure
 
+    plt.bar(x_axis - 0.2, y[0], 0.4, label="remember Stimulus 1")
+    plt.bar(x_axis + 0.2, y[1], 0.4, label="remember Stimulus 2")
+
+    x_axis = [x + 1 for x in x_axis]
+    plt.xticks(range(x), x_axis)
+    plt.ylim(ymin=0, ymax=0.8)
+
+    plt.xlabel("Participants")
+    plt.ylabel("Accuracy")
+    plt.title("Participants Accuracies if First vs Second Stimulus was the one to remember")
+    plt.legend()
+
+    plt.show()
+    return

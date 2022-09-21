@@ -21,6 +21,7 @@ EXCLUDE = [10, 11, 12, 13]
 # =============================================================================
 
 ACCURACIES_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/accuracies.csv"
+COND_ACC_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/cond_accuracies.csv"
 RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/RTs.csv"
 
 RUNS_PLOT = [2.5, 4.5, 6.5, 8.5, 10.5]

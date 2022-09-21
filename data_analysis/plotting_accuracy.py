@@ -1,8 +1,8 @@
 import pandas as pd
-from constants import (ACCURACIES_PATH)
+from constants import (ACCURACIES_PATH, COND_ACC_PATH)
 from utils import (graph_all_participants, get_mean_run_measure, graph_mean_run, get_mean_subj_measure,
                                  barplot_mean_subject, get_mean_block_measure, barplot_mean_block, get_run_error,
-                                 get_subj_error, get_block_error, graph_subj_run)
+                                 get_subj_error, get_block_error, graph_subj_run, plot_cond_measure)
 
 
 ### Plotting Graphs ###
@@ -19,7 +19,7 @@ run_error = get_run_error(measure=accuracies)
 graph_mean_run(mean_run_measure=mean_run_accuracies, run_error=run_error)
 
 # Plotting a graph of the accuracies of one single participant
-#graph_subj_run(mean_run_measure=accuracies.iloc[13])
+graph_subj_run(mean_run_measure=accuracies.iloc[14])
 
 
 
@@ -34,3 +34,7 @@ barplot_mean_subject(mean_subj_measure=mean_subj_accuracies, subj_error=subj_err
 mean_block_accuracies = get_mean_block_measure(measure=accuracies)
 block_error = get_block_error(measure=accuracies)
 barplot_mean_block(mean_block_measure=mean_block_accuracies, block_error=block_error)
+
+# Plotting all participants accuracies if first vs if second stimulus was the one to remember
+cond_acc = pd.read_csv(COND_ACC_PATH, header=None)
+plot_cond_measure(cond_measure=cond_acc)
