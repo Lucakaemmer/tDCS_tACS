@@ -116,7 +116,7 @@ def get_block_error(measure):
 
 def graph_background(runs):
     plt.xticks(runs)
-    plt.ylim(ymin=0, ymax=1)
+    plt.ylim(ymin=0, ymax=1.0)
     for i in RUNS_PLOT:
         plt.axvline(x=i, color='b', alpha=0.3, linestyle='--')
     plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
@@ -142,7 +142,7 @@ def graph_all_participants(measure):
 def graph_mean_run(mean_run_measure, run_error):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
-    midpoint = int(len(mean_run_measure)/2)
+    midpoint = int(len(mean_run_measure) / 2)
     plt.plot(runs[:midpoint], mean_run_measure[:midpoint], marker='o', color=COLORS[3])
     plt.plot(runs[midpoint:], mean_run_measure[midpoint:], marker='o', color=COLORS[3])
     plt.errorbar(runs[:midpoint], mean_run_measure[:midpoint], yerr=run_error[:midpoint], ecolor="black", capsize=4)
@@ -157,10 +157,33 @@ def graph_mean_run(mean_run_measure, run_error):
     return
 
 
+def graph_mean_run_day(mean_run_measure, run_error):
+    runs = range(len(mean_run_measure))
+    runs = [x + 1 for x in runs]
+    midpoint = int(len(mean_run_measure) / 2)
+    plt.plot(runs[:midpoint], mean_run_measure[:midpoint], "b", marker='o', label="sham condition")
+    plt.plot(runs[:midpoint], mean_run_measure[midpoint:], "r", marker='o', label="exp condition")
+    plt.errorbar(runs[:midpoint], mean_run_measure[:midpoint], yerr=run_error[:midpoint], ecolor="b", capsize=4)
+    plt.errorbar(runs[:midpoint], mean_run_measure[midpoint:], yerr=run_error[midpoint:], ecolor="r", capsize=4)
+
+    plt.ylim(ymin=0.5, ymax=0.8)
+    plt.axhspan(ymin=0, ymax=1, xmin=0.33, xmax=0.67, color='black', alpha=0.20, lw=0)
+
+    plt.text(3.5, 0.77, "Stimulation\nPhase", fontsize=15, horizontalalignment='center', verticalalignment='top',
+             multialignment='center')
+    plt.xlabel('Runs')
+    plt.ylabel('Accuracy')
+    plt.title("Mean Accuracy over all 12 runs, layered")
+    plt.legend()
+
+    plt.show()
+    return
+
+
 def graph_subj_run(mean_run_measure):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
-    midpoint = int(len(mean_run_measure)/2)
+    midpoint = int(len(mean_run_measure) / 2)
     plt.plot(runs[:midpoint], mean_run_measure[:midpoint], marker='o', color=COLORS[3])
     plt.plot(runs[midpoint:], mean_run_measure[midpoint:], marker='o', color=COLORS[3])
     graph_background(runs=runs)
