@@ -2,12 +2,12 @@
 #                           Computing Accuracies
 # =============================================================================
 
-BOUNDS = [0, 24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288]
+RUNS = list(range(1, 13))
 
 DATA_PATH = "/Users/lucakammer/Documents/Academia/Uni_BerlinFU/Semester3/Master_Thesis/Data"
 
 COL_NAMES = ['Trial Onset', 'Trial Duration', 'Trial Type', 'Stimulus Set', 'Stimulus 1', 'Stimulus 2', 'Stimulus 3',
-             'Stimulus 4', 'WM delay', 'ITI', 'Timing', 'Keypress', 'Response', 'Too late', 'RT']
+             'Stimulus 4', 'WM delay', 'ITI', 'Timing', 'Keypress', 'Response', 'Too late', 'RT', 'Run']
 
 STIMULATION_GROUP_1 = [0, 2, 5, 7, 8, 10, 12]
 

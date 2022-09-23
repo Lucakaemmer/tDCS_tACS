@@ -4,7 +4,7 @@ import glob
 import os
 from scipy.stats import sem
 import matplotlib.pyplot as plt
-from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT)
+from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT, RUNS)
 
 
 # =============================================================================
@@ -20,8 +20,10 @@ def import_data(data_path, col_names):
         data_files = glob.glob(os.path.join(s, "*.tsv"))
         data_files = sorted(data_files)
         data = pd.DataFrame(columns=col_names)
-        for f in data_files:
-            df = pd.read_csv(f, sep='\t')
+        for f in range(len(data_files)):
+            run_column = np.repeat(f+1, 24)
+            df = pd.read_csv(data_files[f], sep='\t')
+            df['Run'] = run_column
             data = pd.concat([data, df])
         data_set.append(data)
     return data_set
@@ -37,21 +39,19 @@ def exc_timeout(data):
     return data_exc
 
 
-def get_measure(data, param, bounds):
+def get_measure(data, param):
     measure = []
-    for bound in range(len(bounds) - 1):
-        lower_bound = bounds[bound]
-        upper_bound = bounds[bound + 1]
-        measure.append(np.mean(data[param][lower_bound:upper_bound]))
+    for run in RUNS:
+        measure.append(np.mean(data.loc[data['Run'] == run, param]))
     return measure
 
 
-def get_subjects_measure(data, param, bounds):
+def get_subjects_measure(data, param,):
     n_subj = len(data)
-    n_runs = len(bounds) - 1
+    n_runs = len(RUNS)
     subjects_measure = np.zeros((n_subj, n_runs))
     for subj in range(n_subj):
-        subjects_measure[subj] = get_measure(data=data[subj], param=param, bounds=bounds)
+        subjects_measure[subj] = get_measure(data=data[subj], param=param)
     return subjects_measure
 
 
@@ -119,7 +119,7 @@ def get_run_error(measure):
 
 def get_subj_error(measure):
     subj_error = np.zeros(measure.shape[0])
-    for i in range(measure.shape[0]):
+    for i in range(len(subj_error)):
         subj_error[i] = sem(measure.iloc[i, :])
     return subj_error
 
