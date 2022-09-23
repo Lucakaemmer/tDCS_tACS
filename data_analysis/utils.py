@@ -27,6 +27,16 @@ def import_data(data_path, col_names):
     return data_set
 
 
+def exc_timeout(data):
+    n_subj = len(data)
+    data_exc = []
+    for subj in range(n_subj):
+        subject = data[subj]
+        subject_exc = subject.loc[subject['Too late'] == 0]
+        data_exc.append(subject_exc)
+    return data_exc
+
+
 def get_measure(data, param, bounds):
     measure = []
     for bound in range(len(bounds) - 1):
@@ -51,11 +61,24 @@ def get_conditional_accuracy(data, condition):
     stim_2 = np.zeros(n_subj)
     for subj in range(n_subj):
         measure = data[subj]
-        acc_1 = np.mean(measure.loc[measure[condition] == 1, 'Response'])
-        acc_2 = np.mean(measure.loc[measure[condition] == 2, 'Response'])
+        acc_1 = measure.loc[measure[condition] == 1, 'Response']
+        acc_2 = measure.loc[measure[condition] == 2, 'Response']
         stim_1[subj] = np.mean(acc_1)
         stim_2[subj] = np.mean(acc_2)
     return stim_1, stim_2
+
+
+def get_conditional_RT(data, condition):
+    n_subj = len(data)
+    correct = np.zeros(n_subj)
+    wrong = np.zeros(n_subj)
+    for subj in range(n_subj):
+        measure = data[subj]
+        RT_c = measure.loc[measure[condition] == 1, 'RT']
+        RT_w = measure.loc[measure[condition] == 0, 'RT']
+        correct[subj] = np.mean(RT_c)
+        wrong[subj] = np.mean(RT_w)
+    return correct, wrong
 
 
 def shift_runs(measure, stim_group_1):
@@ -139,7 +162,7 @@ def graph_all_participants(measure):
     return
 
 
-def graph_mean_run(mean_run_measure, run_error):
+def graph_mean_run(mean_run_measure, run_error, title):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
@@ -152,12 +175,12 @@ def graph_mean_run(mean_run_measure, run_error):
         plt.text(x=runs[i] - 0.25, y=mean_run_measure[i] - 0.08, s=str(round(mean_run_measure[i], 2)))
     plt.xlabel('Runs')
     plt.ylabel('Accuracy')
-    plt.title("Mean Accuracy over all 12 runs")
+    plt.title(title)
     plt.show()
     return
 
 
-def graph_mean_run_day(mean_run_measure, run_error):
+def graph_mean_run_day(mean_run_measure, run_error, title):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
@@ -173,7 +196,7 @@ def graph_mean_run_day(mean_run_measure, run_error):
              multialignment='center')
     plt.xlabel('Runs')
     plt.ylabel('Accuracy')
-    plt.title("Mean Accuracy over all 12 runs, layered")
+    plt.title(title)
     plt.legend()
 
     plt.show()
@@ -241,6 +264,26 @@ def plot_cond_measure(cond_measure):
     plt.xlabel("Participants")
     plt.ylabel("Accuracy")
     plt.title("Participants Accuracies if First vs Second Stimulus was the one to remember")
+    plt.legend()
+
+    plt.show()
+    return
+
+
+def plot_cond_RT(cond_measure):
+    x = len(cond_measure.columns)
+    x_axis = np.arange(x)
+    y = cond_measure
+
+    plt.bar(x_axis[0], y[0], 1, label="Correct RT")
+    plt.bar(x_axis[1], y[1], 1, label="Wrong RT")
+
+    plt.xticks(range(x), ["correct", "wrong"])
+    plt.ylim(ymin=0, ymax=1)
+
+    plt.xlabel("Outcome")
+    plt.ylabel("Reaction Time")
+    plt.title("RT for correct vs. wrong trials")
     plt.legend()
 
     plt.show()

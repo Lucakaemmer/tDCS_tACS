@@ -13,7 +13,7 @@ STIMULATION_GROUP_1 = [0, 2, 5, 7, 8, 10, 12]
 
 STIMULATION_GROUP_2 = [1, 3, 4, 6, 9, 11, 13]
 
-EXCLUDE = [10, 11, 12, 13]
+EXCLUDE = [2, 3, 11]
 
 
 # =============================================================================
@@ -23,6 +23,8 @@ EXCLUDE = [10, 11, 12, 13]
 ACCURACIES_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/accuracies.csv"
 COND_ACC_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/cond_accuracies.csv"
 RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/RTs.csv"
+COND_RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/cond_RTs.csv"
+ACC_UNSHIFTED_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/accuracies_unshifted.csv"
 
 RUNS_PLOT = [2.5, 4.5, 6.5, 8.5, 10.5]
 BLOCK_INDEXES = [0, 2, 4, 6, 8, 10]
