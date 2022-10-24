@@ -21,7 +21,7 @@ def import_data(data_path, col_names):
         data_files = sorted(data_files)
         data = pd.DataFrame(columns=col_names)
         for f in range(len(data_files)):
-            run_column = np.repeat(f+1, 24)
+            run_column = np.repeat(f + 1, 24)
             df = pd.read_csv(data_files[f], sep='\t')
             df['Run'] = run_column
             data = pd.concat([data, df])
@@ -29,7 +29,7 @@ def import_data(data_path, col_names):
     return data_set
 
 
-def exc_timeout(data):
+def exclude_timeout_runs(data):
     n_subj = len(data)
     data_exc = []
     for subj in range(n_subj):
@@ -46,7 +46,7 @@ def get_measure(data, param):
     return measure
 
 
-def get_subjects_measure(data, param,):
+def get_subjects_measure(data, param):
     n_subj = len(data)
     n_runs = len(RUNS)
     subjects_measure = np.zeros((n_subj, n_runs))
@@ -67,6 +67,7 @@ def get_conditional_accuracy(data, condition):
         stim_2[subj] = np.mean(acc_2)
     return stim_1, stim_2
 
+# TODO simplify get_conditional_x to return only one value given a parameter and condition value
 
 def get_conditional_RT(data, condition):
     n_subj = len(data)
@@ -84,7 +85,7 @@ def get_conditional_RT(data, condition):
 def shift_runs(measure, stim_group_1):
     for i in stim_group_1:
         measure[i] = np.roll(measure[i], 6)
-    return measure
+    return
 
 
 def get_mean_run_measure(measure):

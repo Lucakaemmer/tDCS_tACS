@@ -1,27 +1,27 @@
 import numpy as np
 from constants import (DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
-from utils import (get_subjects_measure, import_data, exc_timeout, shift_runs, get_conditional_accuracy,
+from utils import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs, get_conditional_accuracy,
                    get_conditional_RT)
 
 # Importing data from all participants
 data_set = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
 
 # Excluding timeouts from data_set
-data_set = exc_timeout(data=data_set)
+data_set = exclude_timeout_runs(data=data_set)
 
 # Calculating mean accuracies from all participants over the 12 runs
 participant_accuracies = get_subjects_measure(data=data_set, param="Response")
 
 # Getting accuracies for correct stim first and correct stim second
 acc_1, acc_2 = get_conditional_accuracy(data=data_set, condition='Stimulus 1')
-cond_accuracies = np.c_[acc_1, acc_2]
+cond_accuracies = np.asarray([acc_1, acc_2])
 
 # Calculating mean RTs from all participants over the 12 runs
 participant_RTs = get_subjects_measure(data=data_set, param="RT")
 
 # Getting RT for correct vs for wrong trials
 correct_RT, wrong_RT = get_conditional_RT(data=data_set, condition='Response')
-cond_RT = np.c_[np.mean(correct_RT), np.mean(wrong_RT)]
+cond_RT = np.asarray([np.mean(correct_RT), np.mean(wrong_RT)])
 
 # Saving accuracies before shifting to compare the days
 np.savetxt("accuracies_unshifted.csv", participant_accuracies, delimiter=",")
