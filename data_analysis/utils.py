@@ -55,31 +55,14 @@ def get_subjects_measure(data, param):
     return subjects_measure
 
 
-def get_conditional_accuracy(data, condition):
+def get_conditional_measure(data, measure, condition, group):
     n_subj = len(data)
-    stim_1 = np.zeros(n_subj)
-    stim_2 = np.zeros(n_subj)
+    conditional_measure = np.zeros(n_subj)
     for subj in range(n_subj):
-        measure = data[subj]
-        acc_1 = measure.loc[measure[condition] == 1, 'Response']
-        acc_2 = measure.loc[measure[condition] == 2, 'Response']
-        stim_1[subj] = np.mean(acc_1)
-        stim_2[subj] = np.mean(acc_2)
-    return stim_1, stim_2
-
-# TODO simplify get_conditional_x to return only one value given a parameter and condition value
-
-def get_conditional_RT(data, condition):
-    n_subj = len(data)
-    correct = np.zeros(n_subj)
-    wrong = np.zeros(n_subj)
-    for subj in range(n_subj):
-        measure = data[subj]
-        RT_c = measure.loc[measure[condition] == 1, 'RT']
-        RT_w = measure.loc[measure[condition] == 0, 'RT']
-        correct[subj] = np.mean(RT_c)
-        wrong[subj] = np.mean(RT_w)
-    return correct, wrong
+        subject_data = data[subj]
+        subject_conditional_measure = subject_data.loc[subject_data[condition] == group, measure]
+        conditional_measure[subj] = np.mean(subject_conditional_measure)
+    return conditional_measure
 
 
 def shift_runs(measure, stim_group_1):
@@ -163,7 +146,7 @@ def graph_all_participants(measure):
     return
 
 
-def graph_mean_run(mean_run_measure, run_error, title):
+def graph_mean_run(mean_run_measure, run_error, title, yaxis):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
@@ -175,28 +158,28 @@ def graph_mean_run(mean_run_measure, run_error, title):
     for i in range(len(runs)):
         plt.text(x=runs[i] - 0.25, y=mean_run_measure[i] - 0.08, s=str(round(mean_run_measure[i], 2)))
     plt.xlabel('Runs')
-    plt.ylabel('Accuracy')
+    plt.ylabel(yaxis)
     plt.title(title)
     plt.show()
     return
 
 
-def graph_mean_run_day(mean_run_measure, run_error, title):
+def graph_mean_run_day(mean_run_measure, run_error,  ymin, ymax, title, label_1, label_2, yaxis):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
-    plt.plot(runs[:midpoint], mean_run_measure[:midpoint], "b", marker='o', label="sham condition")
-    plt.plot(runs[:midpoint], mean_run_measure[midpoint:], "r", marker='o', label="exp condition")
+    plt.plot(runs[:midpoint], mean_run_measure[:midpoint], "b", marker='o', label=label_1)
+    plt.plot(runs[:midpoint], mean_run_measure[midpoint:], "r", marker='o', label=label_2)
     plt.errorbar(runs[:midpoint], mean_run_measure[:midpoint], yerr=run_error[:midpoint], ecolor="b", capsize=4)
     plt.errorbar(runs[:midpoint], mean_run_measure[midpoint:], yerr=run_error[midpoint:], ecolor="r", capsize=4)
 
-    plt.ylim(ymin=0.5, ymax=0.8)
+    plt.ylim(ymin=ymin, ymax=ymax)
     plt.axhspan(ymin=0, ymax=1, xmin=0.33, xmax=0.67, color='black', alpha=0.20, lw=0)
 
     plt.text(3.5, 0.77, "Stimulation\nPhase", fontsize=15, horizontalalignment='center', verticalalignment='top',
              multialignment='center')
     plt.xlabel('Runs')
-    plt.ylabel('Accuracy')
+    plt.ylabel(yaxis)
     plt.title(title)
     plt.legend()
 

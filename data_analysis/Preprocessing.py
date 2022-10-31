@@ -1,7 +1,6 @@
 import numpy as np
 from constants import (DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
-from utils import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs, get_conditional_accuracy,
-                   get_conditional_RT)
+from utils import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs, get_conditional_measure)
 
 # Importing data from all participants
 data_set = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
@@ -13,15 +12,17 @@ data_set = exclude_timeout_runs(data=data_set)
 participant_accuracies = get_subjects_measure(data=data_set, param="Response")
 
 # Getting accuracies for correct stim first and correct stim second
-acc_1, acc_2 = get_conditional_accuracy(data=data_set, condition='Stimulus 1')
-cond_accuracies = np.asarray([acc_1, acc_2])
+accuracy_stimulus_1 = get_conditional_measure(data=data_set, measure='Response', condition='Stimulus 1', group=1)
+accuracy_stimulus_2 = get_conditional_measure(data=data_set, measure='Response', condition='Stimulus 1', group=2)
+conditional_accuracies = np.asarray([accuracy_stimulus_1, accuracy_stimulus_2])
 
 # Calculating mean RTs from all participants over the 12 runs
 participant_RTs = get_subjects_measure(data=data_set, param="RT")
 
 # Getting RT for correct vs for wrong trials
-correct_RT, wrong_RT = get_conditional_RT(data=data_set, condition='Response')
-cond_RT = np.asarray([np.mean(correct_RT), np.mean(wrong_RT)])
+correct_RT = get_conditional_measure(data=data_set, measure='RT', condition='Response', group=1)
+wrong_RT = get_conditional_measure(data=data_set, measure='RT', condition='Response', group=0)
+conditional_RT = np.asarray([np.mean(correct_RT), np.mean(wrong_RT)])
 
 # Saving accuracies before shifting to compare the days
 np.savetxt("accuracies_unshifted.csv", participant_accuracies, delimiter=",")
@@ -36,6 +37,6 @@ shift_runs(measure=participant_RTs, stim_group_1=STIMULATION_GROUP_1)
 
 # Saving the table of accuracies for later use
 np.savetxt("accuracies.csv", participant_accuracies, delimiter=",")
-np.savetxt("cond_accuracies.csv", cond_accuracies, delimiter=",")
+np.savetxt("cond_accuracies.csv", conditional_accuracies, delimiter=",")
 np.savetxt("RTs.csv", participant_RTs, delimiter=",")
-np.savetxt("cond_RTs.csv", cond_RT, delimiter=",")
+np.savetxt("cond_RTs.csv", conditional_RT, delimiter=",")
