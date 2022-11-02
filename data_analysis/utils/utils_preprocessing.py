@@ -4,7 +4,7 @@ import glob
 import os
 from scipy.stats import sem
 import matplotlib.pyplot as plt
-from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT, RUNS)
+from constants import (BLOCK_INDEXES, TRIALS, RUNS)
 
 
 def import_data(data_path, col_names):
@@ -32,6 +32,14 @@ def exclude_timeout_runs(data):
         subject_exc = subject.loc[subject['Too late'] == 0]
         data_exc.append(subject_exc)
     return data_exc
+
+
+def get_subj_outcome(data, param):
+    n_subj = len(data)
+    subj_outcome = np.zeros((n_subj, len(TRIALS)))
+    for subj in range(n_subj):
+        subj_outcome[subj] = data[subj][param]
+    return subj_outcome
 
 
 def get_measure(data, param):

@@ -2,6 +2,8 @@
 #                           Computing Accuracies
 # =============================================================================
 
+TRIALS = list(range(0, 288))
+
 RUNS = list(range(1, 13))
 
 DATA_PATH = "/Users/lucakammer/Documents/Academia/Uni_BerlinFU/Semester3/Master_Thesis/Data"

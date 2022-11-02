@@ -1,13 +1,17 @@
 import numpy as np
 from constants import (DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
 from utils.utils_preprocessing import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs,
-                                       get_conditional_measure)
+                                       get_conditional_measure, get_subj_outcome)
 
 # Importing data from all participants
-data_set = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
+data_set_all = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
 
 # Excluding timeouts from data_set
-data_set = exclude_timeout_runs(data=data_set)
+data_set = exclude_timeout_runs(data=data_set_all)
+
+# Calculating accuracy for each trial over all participants
+participant_outcome = get_subj_outcome(data=data_set_all, param='Response')
+trials_average = np.mean(participant_outcome, axis=0)
 
 # Calculating mean accuracies from all participants over the 12 runs
 participant_accuracies = get_subjects_measure(data=data_set, param="Response")
