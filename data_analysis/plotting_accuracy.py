@@ -1,8 +1,9 @@
 import pandas as pd
 from constants import (ACCURACIES_PATH, COND_ACC_PATH, RTs_PATH, COND_RTs_PATH, ACC_UNSHIFTED_PATH)
-from utils import (graph_all_participants, get_mean_run_measure, graph_mean_run, get_mean_subj_measure,
-                   barplot_mean_subject, get_mean_block_measure, barplot_mean_block, get_run_error,
-                   get_subj_error, get_block_error, graph_subj_run, plot_cond_measure, graph_mean_run_day, plot_cond_RT)
+from utils.utils_preprocessing import (get_mean_run_measure, get_mean_block_measure, get_run_error,
+                                       get_mean_subj_measure, get_subj_error, get_block_error)
+from utils.utils_plotting import (graph_all_participants, graph_mean_run, barplot_mean_subject, barplot_mean_block,
+                                  plot_cond_measure, graph_mean_run_day)
 
 ### Plotting Graphs ###
 

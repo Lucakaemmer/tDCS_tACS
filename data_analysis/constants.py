@@ -9,9 +9,9 @@ DATA_PATH = "/Users/lucakammer/Documents/Academia/Uni_BerlinFU/Semester3/Master_
 COL_NAMES = ['Trial Onset', 'Trial Duration', 'Trial Type', 'Stimulus Set', 'Stimulus 1', 'Stimulus 2', 'Stimulus 3',
              'Stimulus 4', 'WM delay', 'ITI', 'Timing', 'Keypress', 'Response', 'Too late', 'RT', 'Run']
 
-STIMULATION_GROUP_1 = [0, 2, 5, 7, 8, 10, 12]
+STIMULATION_GROUP_1 = [0, 2, 5, 7, 8, 10, 12, 15, 16, 18, 21]
 
-STIMULATION_GROUP_2 = [1, 3, 4, 6, 9, 11, 13]
+STIMULATION_GROUP_2 = [1, 3, 4, 6, 9, 11, 13, 14, 17, 19, 20]
 
 EXCLUDE = [2, 3, 11]
 

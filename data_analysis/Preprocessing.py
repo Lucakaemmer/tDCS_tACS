@@ -1,6 +1,7 @@
 import numpy as np
 from constants import (DATA_PATH, COL_NAMES, STIMULATION_GROUP_1, EXCLUDE)
-from utils import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs, get_conditional_measure)
+from utils.utils_preprocessing import (get_subjects_measure, import_data, exclude_timeout_runs, shift_runs,
+                                       get_conditional_measure)
 
 # Importing data from all participants
 data_set = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
