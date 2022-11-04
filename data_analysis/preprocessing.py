@@ -11,6 +11,7 @@ data_set = exclude_timeout_runs(data=data_set_all)
 
 # Calculating accuracy for each trial over all participants
 participant_outcome = get_subj_outcome(data=data_set_all, param='Response')
+shift_runs(measure=participant_outcome, stim_group_1=STIMULATION_GROUP_1, shift=144)
 trials_average = np.mean(participant_outcome, axis=0)
 
 # Calculating mean accuracies from all participants over the 12 runs
@@ -33,8 +34,8 @@ conditional_RT = np.asarray([np.mean(correct_RT), np.mean(wrong_RT)])
 np.savetxt("accuracies_unshifted.csv", participant_accuracies, delimiter=",")
 
 # Shifting around the runs to align the stimulation conditions for all participants
-shift_runs(measure=participant_accuracies, stim_group_1=STIMULATION_GROUP_1)
-shift_runs(measure=participant_RTs, stim_group_1=STIMULATION_GROUP_1)
+shift_runs(measure=participant_accuracies, stim_group_1=STIMULATION_GROUP_1, shift=6)
+shift_runs(measure=participant_RTs, stim_group_1=STIMULATION_GROUP_1, shift=6)
 
 # Excluding participants that did not meet the performance threshold
 # participant_accuracies = np.delete(participant_accuracies, EXCLUDE, 0)

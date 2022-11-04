@@ -68,9 +68,9 @@ def get_conditional_measure(data, measure, condition, group):
     return conditional_measure
 
 
-def shift_runs(measure, stim_group_1):
+def shift_runs(measure, stim_group_1, shift):
     for i in stim_group_1:
-        measure[i] = np.roll(measure[i], 6)
+        measure[i] = np.roll(measure[i], shift)
     return
 
 
