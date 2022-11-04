@@ -1,10 +1,6 @@
 import numpy as np
-import pandas as pd
-import glob
-import os
-from scipy.stats import sem
 import matplotlib.pyplot as plt
-from constants import (BLOCK_INDEXES, RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT, RUNS)
+from constants import (RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT)
 
 
 def graph_background(runs):

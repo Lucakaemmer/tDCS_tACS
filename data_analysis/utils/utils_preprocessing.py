@@ -3,7 +3,6 @@ import pandas as pd
 import glob
 import os
 from scipy.stats import sem
-import matplotlib.pyplot as plt
 from constants import (BLOCK_INDEXES, TRIALS, RUNS)
 
 
