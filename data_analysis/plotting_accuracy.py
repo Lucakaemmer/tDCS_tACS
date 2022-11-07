@@ -51,7 +51,7 @@ graph_mean_run_day(mean_run_measure=mean_run_RT, run_error=run_error_RT, ymin=0.
                    label_2="Experimental Condition", yaxis="Reaction Time")
 
 # Plotting a graph of the accuracies of one single participant
-# graph_subj_run(mean_run_measure=accuracies.iloc[2])
+#graph_subj_run(mean_run_measure=accuracies.iloc[2])
 
 ## Plotting Barplots ###
 
