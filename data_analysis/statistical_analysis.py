@@ -28,7 +28,7 @@ stats_data_excluded = stats_data[(stats_data.Subject != 3) & (stats_data.Subject
                                  & (stats_data.Subject != 21)]
 
 
-model = AnovaRM(data=stats_data_treatment, depvar='Accuracy', subject='Subject', within=['Run', 'Treatment'])
+model = AnovaRM(data=stats_data, depvar='Accuracy', subject='Subject', within=['Run', 'Treatment'])
 fitted_model = model.fit()
 print(fitted_model)
 
