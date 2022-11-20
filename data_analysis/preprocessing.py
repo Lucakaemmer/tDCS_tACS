@@ -31,7 +31,7 @@ wrong_RT = get_conditional_measure(data=data_set, measure='RT', condition='Respo
 conditional_RT = np.asarray([np.mean(correct_RT), np.mean(wrong_RT)])
 
 # Saving accuracies before shifting to compare the days
-np.savetxt("accuracies_unshifted.csv", participant_accuracies, delimiter=",")
+np.savetxt("data/accuracies_unshifted.csv", participant_accuracies, delimiter=",")
 
 # Shifting around the runs to align the stimulation conditions for all participants
 shift_runs(measure=participant_accuracies, stim_group_1=STIMULATION_GROUP_1, shift=6)
@@ -42,7 +42,7 @@ shift_runs(measure=participant_RTs, stim_group_1=STIMULATION_GROUP_1, shift=6)
 #participant_RTs = np.delete(participant_RTs, EXCLUDE, 0)
 
 # Saving the table of accuracies for later use
-np.savetxt("accuracies.csv", participant_accuracies, delimiter=",")
-np.savetxt("cond_accuracies.csv", conditional_accuracies, delimiter=",")
-np.savetxt("RTs.csv", participant_RTs, delimiter=",")
-np.savetxt("cond_RTs.csv", conditional_RT, delimiter=",")
+np.savetxt("data/accuracies.csv", participant_accuracies, delimiter=",")
+np.savetxt("data/cond_accuracies.csv", conditional_accuracies, delimiter=",")
+np.savetxt("data/RTs.csv", participant_RTs, delimiter=",")
+np.savetxt("data/cond_RTs.csv", conditional_RT, delimiter=",")
