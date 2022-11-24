@@ -3,7 +3,7 @@ from constants import (ACCURACIES_PATH, COND_ACC_PATH, RTs_PATH, COND_RTs_PATH, 
 from utils.utils_preprocessing import (get_mean_run_measure, get_mean_block_measure, get_run_error,
                                        get_mean_subj_measure, get_subj_error, get_block_error)
 from utils.utils_plotting import (graph_all_participants, graph_mean_run, barplot_mean_subject, barplot_mean_block,
-                                  plot_cond_measure, graph_mean_run_day)
+                                  plot_cond_measure, graph_mean_run_layered)
 
 ### Plotting Graphs ###
 
@@ -36,19 +36,19 @@ graph_mean_run(mean_run_measure=mean_run_RT, run_error=run_error_RT, title="Mean
                yaxis="Reaction Time")
 
 # Plotting a graph of the overall accuracy over the 12 runs with the days laid on top of each other
-graph_mean_run_day(mean_run_measure=mean_run_accuracies, run_error=run_error_acc, ymin=0.5, ymax=0.8,
-                   title="Mean Accuracy over all 12 runs, layered", label_1="Sham Condition",
-                   label_2="Experimental Condition", yaxis="Accuracy")
+graph_mean_run_layered(mean_run_measure=mean_run_accuracies, run_error=run_error_acc, ymin=0.5, ymax=0.8,
+                       title="Mean Accuracy over all 12 runs, layered", label_1="Sham Condition",
+                       label_2="Experimental Condition", yaxis="Accuracy")
 
 # Plotting a graph of the overall accuracy over the 12 runs with the days laid on top of each other
-graph_mean_run_day(mean_run_measure=mean_run_acc_unshifted, run_error=run_error_acc_uns, ymin=0.5, ymax=0.8,
-                   title="Mean Accuracy comparing the days, layered", label_1="Day 1", label_2="Day 2",
-                   yaxis="Accuracy")
+graph_mean_run_layered(mean_run_measure=mean_run_acc_unshifted, run_error=run_error_acc_uns, ymin=0.5, ymax=0.8,
+                       title="Mean Accuracy comparing the days, layered", label_1="Day 1", label_2="Day 2",
+                       yaxis="Accuracy")
 
 # Plotting a graph of the overall accuracy over the 12 runs with the days laid on top of each other
-graph_mean_run_day(mean_run_measure=mean_run_RT, run_error=run_error_RT, ymin=0.3, ymax=0.8,
-                   title="Mean Reaction Time over all 12 runs, layered", label_1="Sham Condition",
-                   label_2="Experimental Condition", yaxis="Reaction Time")
+graph_mean_run_layered(mean_run_measure=mean_run_RT, run_error=run_error_RT, ymin=0.3, ymax=0.8,
+                       title="Mean Reaction Time over all 12 runs, layered", label_1="Sham Condition",
+                       label_2="Experimental Condition", yaxis="Reaction Time")
 
 # Plotting a graph of the accuracies of one single participant
 #graph_subj_run(mean_run_measure=accuracies.iloc[2])

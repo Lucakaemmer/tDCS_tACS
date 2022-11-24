@@ -5,7 +5,9 @@ from constants import (RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, 
 
 def graph_background(runs):
     plt.xticks(runs)
-    plt.ylim(ymin=0, ymax=1.0)
+    ymin = 0
+    ymax = 1.0
+    plt.ylim(ymin=ymin, ymax=ymax)
     for i in RUNS_PLOT:
         plt.axvline(x=i, color='b', alpha=0.3, linestyle='--')
     plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
@@ -33,7 +35,7 @@ def graph_mean_run(mean_run_measure, run_error, title, yaxis):
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
     plt.plot(runs[:midpoint], mean_run_measure[:midpoint], marker='o', color=COLORS[3])
-    plt.plot(runs[midpoint:], mean_run_measure[midpoint:], marker='o', color=COLORS[3])
+    plt.plot(runs[midpoint:], mean_run_measure[midpoint:], marker='s', color=COLORS[3])
     plt.errorbar(runs[:midpoint], mean_run_measure[:midpoint], yerr=run_error[:midpoint], ecolor="black", capsize=4)
     plt.errorbar(runs[midpoint:], mean_run_measure[midpoint:], yerr=run_error[midpoint:], ecolor="black", capsize=4)
     graph_background(runs=runs)
@@ -46,17 +48,18 @@ def graph_mean_run(mean_run_measure, run_error, title, yaxis):
     return
 
 
-def graph_mean_run_day(mean_run_measure, run_error,  ymin, ymax, title, label_1, label_2, yaxis):
+def graph_mean_run_layered(mean_run_measure, run_error, ymin, ymax, title, label_1, label_2, yaxis):
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
     plt.plot(runs[:midpoint], mean_run_measure[:midpoint], "b", marker='o', label=label_1)
-    plt.plot(runs[:midpoint], mean_run_measure[midpoint:], "r", marker='o', label=label_2)
+    plt.plot(runs[:midpoint], mean_run_measure[midpoint:], "r", marker='s', label=label_2)
     plt.errorbar(runs[:midpoint], mean_run_measure[:midpoint], yerr=run_error[:midpoint], ecolor="b", capsize=4)
     plt.errorbar(runs[:midpoint], mean_run_measure[midpoint:], yerr=run_error[midpoint:], ecolor="r", capsize=4)
 
     plt.ylim(ymin=ymin, ymax=ymax)
     plt.axhspan(ymin=0, ymax=1, xmin=0.33, xmax=0.67, color='black', alpha=0.20, lw=0)
+    plt.hlines(y=np.arange(ymin+0.05, ymax-0.05, 0.05).tolist(), xmin=1, xmax=6.0, linestyles='dashed', colors='black')
 
     plt.text(3.5, 0.77, "Stimulation\nPhase", fontsize=15, horizontalalignment='center', verticalalignment='top',
              multialignment='center')
