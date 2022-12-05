@@ -94,7 +94,7 @@ def barplot_mean_subject(mean_subj_measure, subj_error):
     plt.bar(x=part_id, height=mean_subj_measure)
     plt.errorbar(x=part_id, y=mean_subj_measure, yerr=subj_error, fmt=".", ecolor="black", capsize=5)
     plt.xticks(part_id, part_id)
-    plt.axhline(y=0.6, color='r', linestyle='-')
+    plt.axhline(y=0.55, color='r', linestyle='-')
     plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
     plt.title('Mean Participant Accuracy')
     plt.xlabel('Participant ID')

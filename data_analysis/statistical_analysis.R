@@ -2,7 +2,7 @@ library(tidyverse)
 library(ggpubr)
 library(rstatix)
 
-stats_data = read.csv("/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/stats_data.csv", header=FALSE)
+stats_data = read.csv("/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/stats_data_treatment.csv", header=FALSE)
 colnames(stats_data) = c("subject", "treatment", "run", "accuracy")
 
 
@@ -56,6 +56,15 @@ one.way <- stats_data %>%
   get_anova_table() %>%
   adjust_pvalue(method = "bonferroni")
 one.way
+
+# Pairwise comparisons between treatment groups
+pwc <- stats_data %>%
+  group_by(run) %>%
+  pairwise_t_test(
+    accuracy ~ treatment, paired = TRUE,
+    p.adjust.method = "bonferroni"
+  )
+pwc
 
 
 
