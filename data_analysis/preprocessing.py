@@ -9,7 +9,7 @@ data_set_all = import_data(data_path=DATA_PATH, col_names=COL_NAMES)
 # Excluding timeouts from data_set
 data_set = exclude_timeout_runs(data=data_set_all)
 
-# Calculating accuracy for each trial over all participants
+# Calculating accuracy for each trial over all participants for roaming window
 participant_outcome = get_subj_outcome(data=data_set_all, param='Response')
 shift_runs(measure=participant_outcome, stim_group_1=STIMULATION_GROUP_1, shift=144)
 trials_average = np.mean(participant_outcome, axis=0)
@@ -46,3 +46,4 @@ np.savetxt("data/accuracies.csv", participant_accuracies, delimiter=",")
 np.savetxt("data/cond_accuracies.csv", conditional_accuracies, delimiter=",")
 np.savetxt("data/RTs.csv", participant_RTs, delimiter=",")
 np.savetxt("data/cond_RTs.csv", conditional_RT, delimiter=",")
+np.savetxt("data/trials_average.csv", trials_average, delimiter=",")

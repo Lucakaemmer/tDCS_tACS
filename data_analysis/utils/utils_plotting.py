@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from constants import (RUNS_PLOT, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT)
+from constants import (RUNS_PLOT, TRIAL_DISTANCE, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT)
 
 
 def graph_background(runs):
@@ -86,6 +86,18 @@ def graph_subj_run(mean_run_measure):
     plt.title("Mean Accuracy over all 12 runs")
     plt.show()
     return
+
+
+def plot_roving_window(data, resolution, ymin, ymax):
+    averages = data.to_numpy()
+    averages = np.mean(averages.reshape(-1, resolution), axis=1)
+
+    plt.ylim(ymin=ymin, ymax=ymax)
+    plt.axvline(x=0.5, color='b', alpha=0.3, linestyle='--')
+    plt.plot(averages)
+    plt.title('Roving window')
+    plt.ylabel('Accuracy')
+    plt.show()
 
 
 def barplot_mean_subject(mean_subj_measure, subj_error):

@@ -25,7 +25,9 @@ COND_ACC_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data
 RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/RTs.csv"
 COND_RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/cond_RTs.csv"
 ACC_UNSHIFTED_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/accuracies_unshifted.csv"
+TRIAL_AVERAGE_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/trials_average.csv"
 
+TRIAL_DISTANCE = [24.5, 48.5, 72.5, 96.5, 120.5, 144.5, 168.5, 192.5, 216.5, 240.5, 264.5]
 RUNS_PLOT = [2.5, 4.5, 6.5, 8.5, 10.5]
 BLOCK_INDEXES = [0, 2, 4, 6, 8, 10]
 

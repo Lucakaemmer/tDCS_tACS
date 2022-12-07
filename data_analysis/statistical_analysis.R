@@ -1,8 +1,9 @@
 library(tidyverse)
 library(ggpubr)
 library(rstatix)
+library(ggplot2)
 
-stats_data = read.csv("/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/stats_data_treatment.csv", header=FALSE)
+stats_data = read.csv("/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/stats_data.csv", header=FALSE)
 colnames(stats_data) = c("subject", "treatment", "run", "accuracy")
 
 
@@ -32,7 +33,7 @@ str(stats_data)
 ### Visualization ###
 bxp <- ggboxplot(
   stats_data, x = "run", y = "accuracy",
-  color = "treatment", palette = "jco"
+  color = "treatment", palette = "jco",
 )
 bxp
 
