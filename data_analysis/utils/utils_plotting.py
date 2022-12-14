@@ -88,16 +88,36 @@ def graph_subj_run(mean_run_measure):
     return
 
 
-def plot_roving_window(data, resolution, ymin, ymax):
+def plot_by_trial(data, resolution, ymin, ymax, trial_start, trial_finish):
     averages = data.to_numpy()
+    averages = averages[range(trial_start, trial_finish)]
     averages = np.mean(averages.reshape(-1, resolution), axis=1)
+    middle_point = ((len(averages)-1)/2)
 
+    plt.vlines(middle_point, 0, 1, colors='red')
     plt.ylim(ymin=ymin, ymax=ymax)
-    plt.axvline(x=0.5, color='b', alpha=0.3, linestyle='--')
+
     plt.plot(averages)
+    plt.title('Plotting accuracy by trial')
+    plt.ylabel('Accuracy')
+    plt.show()
+    return
+
+
+def roving_window(data, window):
+    average_data = []
+    for i in range(len(data) - window + 1):
+        average_data.append(np.mean(data[i:i + window]))
+    for ind in range(window - 1):
+        average_data.insert(0, np.nan)
+
+    middle_point = ((len(average_data)-1)/2)
+    #plt.vlines(middle_point, colors='red')
+    plt.plot(average_data)
     plt.title('Roving window')
     plt.ylabel('Accuracy')
     plt.show()
+    return
 
 
 def barplot_mean_subject(mean_subj_measure, subj_error):
