@@ -38,8 +38,8 @@ shift_runs(measure=participant_accuracies, stim_group_1=STIMULATION_GROUP_1, shi
 shift_runs(measure=participant_RTs, stim_group_1=STIMULATION_GROUP_1, shift=6)
 
 # Excluding participants that did not meet the performance threshold
-#participant_accuracies = np.delete(participant_accuracies, EXCLUDE, 0)
-#participant_RTs = np.delete(participant_RTs, EXCLUDE, 0)
+participant_accuracies = np.delete(participant_accuracies, EXCLUDE, 0)
+participant_RTs = np.delete(participant_RTs, EXCLUDE, 0)
 
 # Saving the table of accuracies for later use
 np.savetxt("data/accuracies.csv", participant_accuracies, delimiter=",")
