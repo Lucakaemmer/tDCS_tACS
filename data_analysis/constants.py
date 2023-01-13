@@ -14,7 +14,7 @@ COL_NAMES = ['Trial Onset', 'Trial Duration', 'Trial Type', 'Stimulus Set', 'Sti
 STIMULATION_GROUP_1 = [0, 2, 5, 7, 8, 10, 12, 15, 16, 18, 21, 22, 24, 27, 29, 31]
 STIMULATION_GROUP_2 = [1, 3, 4, 6, 9, 11, 13, 14, 17, 19, 20, 23, 25, 26, 28, 30]
 
-EXCLUDE = [2, 18, 20, 26]
+EXCLUDE = [20, 26]
 
 # =============================================================================
 #                                   Plotting

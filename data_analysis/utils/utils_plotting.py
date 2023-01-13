@@ -29,6 +29,24 @@ def graph_all_participants(measure):
     plt.show()
     return
 
+def graph_performance_individual_participants(measure):
+    subjects = range(measure.shape[0])
+    subjects = [x + 1 for x in subjects]
+    ymin = 0.3
+    ymax = 1.0
+    plt.ylim(ymin=ymin, ymax=ymax)
+    plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
+    for i in range(measure.shape[0]):
+        plt.scatter([subjects[i]]*measure.shape[1], measure.iloc[i], facecolors='none', edgecolors=COLORS[i])
+    for i in range(measure.shape[0]):
+        plt.scatter([subjects[i]], np.mean(measure.iloc[i]), c=COLORS[i], marker="s")
+    plt.xlabel('Participants')
+    plt.ylabel('Accuracy')
+    plt.title("Performance of Individual Participants")
+    plt.text(x=len(subjects)-2.2, y=0.47, s="Chance")
+    plt.show()
+    return
+
 
 def graph_mean_run(mean_run_measure, run_error, title, yaxis):
     runs = range(len(mean_run_measure))
@@ -112,7 +130,7 @@ def roving_window(data, window):
         average_data.insert(0, np.nan)
 
     middle_point = ((len(average_data)-1)/2)
-    #plt.vlines(middle_point, colors='red')
+    #plt.vlines(middle_point, colors='red', ymin=0, ymax=1)
     plt.plot(average_data)
     plt.title('Roving window')
     plt.ylabel('Accuracy')
