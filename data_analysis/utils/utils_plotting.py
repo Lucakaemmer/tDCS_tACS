@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
 from constants import (RUNS_PLOT, TRIAL_DISTANCE, COLORS, TEXT_X, TEXT_Y, TEXT_CONT, TEXT_FONT, TEXT_WEIGHT)
 
 
@@ -24,26 +26,36 @@ def graph_all_participants(measure):
         plt.plot(runs, measure.iloc[i], marker='.', color=COLORS[i])
     graph_background(runs=runs)
     plt.xlabel('Runs')
-    plt.ylabel('Accuracy')
-    plt.title("Accuracy of all participants over all 12 runs")
+    plt.ylabel('% of Correct Responses')
+    plt.title('Accuracy of all participants over all 12 runs')
     plt.show()
     return
 
+
 def graph_performance_individual_participants(measure):
+    ymin = 0
+    ymax = 100
+    # font = {'size': 11, 'family': 'Calibri'}
+    # plt.rc('font', **font)
     subjects = range(measure.shape[0])
     subjects = [x + 1 for x in subjects]
-    ymin = 0.3
-    ymax = 1.0
     plt.ylim(ymin=ymin, ymax=ymax)
-    plt.axhline(y=0.5, color='black', alpha=0.5, linestyle=':')
+
     for i in range(measure.shape[0]):
-        plt.scatter([subjects[i]]*measure.shape[1], measure.iloc[i], facecolors='none', edgecolors=COLORS[i])
+        plt.scatter([subjects[i]] * measure.shape[1], measure.iloc[i] * 100, facecolors='none',
+                    edgecolors=["grey"])
     for i in range(measure.shape[0]):
-        plt.scatter([subjects[i]], np.mean(measure.iloc[i]), c=COLORS[i], marker="s")
+        plt.scatter([subjects[i]], np.mean(measure.iloc[i]) * 100, c=COLORS[6], marker="s")
+
     plt.xlabel('Participants')
-    plt.ylabel('Accuracy')
-    plt.title("Performance of Individual Participants")
-    plt.text(x=len(subjects)-2.2, y=0.47, s="Chance")
+    plt.ylabel('% of Correct Responses')
+    plt.axhline(y=50, color='black', alpha=0.5, linestyle=':')
+    #plt.text(x=len(subjects) - 2.2, y=46, s="Chance")
+
+    legend = [Line2D([0], [0], color='grey', markerfacecolor='none', marker='o', linestyle='None',
+                     label='run performance'),
+              Line2D([0], [0], color=COLORS[6], marker="s", linestyle='None', label='mean performance')]
+    plt.legend(handles=legend)
     plt.show()
     return
 
@@ -67,6 +79,7 @@ def graph_mean_run(mean_run_measure, run_error, title, yaxis):
 
 
 def graph_mean_run_layered(mean_run_measure, run_error, ymin, ymax, title, label_1, label_2, yaxis):
+
     runs = range(len(mean_run_measure))
     runs = [x + 1 for x in runs]
     midpoint = int(len(mean_run_measure) / 2)
@@ -77,14 +90,21 @@ def graph_mean_run_layered(mean_run_measure, run_error, ymin, ymax, title, label
 
     plt.ylim(ymin=ymin, ymax=ymax)
     plt.axhspan(ymin=0, ymax=1, xmin=0.33, xmax=0.67, color='black', alpha=0.20, lw=0)
-    plt.hlines(y=np.arange(ymin+0.05, ymax-0.05, 0.05).tolist(), xmin=1, xmax=6.0, linestyles='dashed', colors='black')
+    plt.hlines(y=np.arange(ymin + 0.05, ymax, 0.05).tolist(), xmin=1, xmax=6.0, linestyles='dashed',
+               colors='grey')
+    my_yticks = ['50', '55', '60', '65', '70', '75', '80']
+    plt.yticks(np.arange(ymin, ymax, 0.05), my_yticks)
 
-    plt.text(3.5, 0.77, "Stimulation\nPhase", fontsize=15, horizontalalignment='center', verticalalignment='top',
-             multialignment='center')
+    # plt.text(3.5, 0.79, "Stimulation\nPhase", fontsize=12, horizontalalignment='center', verticalalignment='top',
+    #          multialignment='center')
+    # plt.text(1.7, 0.79, "Baseline\nPhase", fontsize=12, horizontalalignment='center', verticalalignment='top',
+    #          multialignment='center')
+    # plt.text(5.3, 0.79, "Post-Stimulation\nPhase", fontsize=12, horizontalalignment='center', verticalalignment='top',
+    #          multialignment='center')
     plt.xlabel('Runs')
     plt.ylabel(yaxis)
-    plt.title(title)
-    plt.legend()
+    # plt.title(title)
+    plt.legend(loc='lower left', labels=[".", ","])
 
     plt.show()
     return
@@ -110,7 +130,7 @@ def plot_by_trial(data, resolution, ymin, ymax, trial_start, trial_finish):
     averages = data.to_numpy()
     averages = averages[range(trial_start, trial_finish)]
     averages = np.mean(averages.reshape(-1, resolution), axis=1)
-    middle_point = ((len(averages)-1)/2)
+    middle_point = ((len(averages) - 1) / 2)
 
     plt.vlines(middle_point, 0, 1, colors='red')
     plt.ylim(ymin=ymin, ymax=ymax)
@@ -123,17 +143,51 @@ def plot_by_trial(data, resolution, ymin, ymax, trial_start, trial_finish):
 
 
 def roving_window(data, window):
-    average_data = []
-    for i in range(len(data) - window + 1):
-        average_data.append(np.mean(data[i:i + window]))
-    for ind in range(window - 1):
-        average_data.insert(0, np.nan)
+    ymin = 0.50
+    ymax = 0.80
 
-    middle_point = ((len(average_data)-1)/2)
-    #plt.vlines(middle_point, colors='red', ymin=0, ymax=1)
-    plt.plot(average_data)
-    plt.title('Roving window')
-    plt.ylabel('Accuracy')
+    average_data = []
+    roving_data = data.to_numpy().ravel()
+    mean_append_data = np.ones(len(range(window)) // 2) * roving_data.mean()
+    roving_data = np.concatenate((mean_append_data, roving_data, mean_append_data), axis=0)
+    for i in range(len(data)):
+        average_data.append(np.mean(roving_data[i:i + window]))
+
+    run_distance = (len(average_data) // 12)
+    run_tick = run_distance // 2
+    run_ticks = [run_tick]
+    for i in range(5):
+        run_tick = run_tick + run_distance
+        run_ticks.append(run_tick)
+    plt.xticks(ticks=run_ticks, labels=range(1, 7))
+    plt.ylim(ymin=ymin, ymax=ymax)
+
+    plt.hlines(y=np.arange(ymin + 0.05, ymax, 0.05).tolist(), xmin=0, xmax=len(average_data) // 2, linestyles='dashed',
+               colors='grey')
+
+    length_graph = ((len(average_data) - 1) / 2)
+    position_line = length_graph / 6
+    for i in range(5):
+        plt.vlines(position_line, colors='grey', ymin=ymin, ymax=ymax, alpha=0.50)
+        position_line = position_line + length_graph / 6
+
+    plt.axhspan(ymin=ymin, ymax=ymax, xmin=0.344, xmax=0.65, color='black', alpha=0.20, lw=0)
+
+    # plt.text(np.mean(run_ticks[:2]), ymax - 0.01, "Baseline\nPhase", fontsize=12, horizontalalignment='center',
+    #          verticalalignment='top', multialignment='center')
+    # plt.text(np.mean(run_ticks[2:4]), ymax - 0.01, "Stimulation\nPhase", fontsize=12, horizontalalignment='center',
+    #          verticalalignment='top', multialignment='center')
+    # plt.text(np.mean(run_ticks[4:]), ymax - 0.01, "Post-Stimulation\nPhase", fontsize=12, horizontalalignment='center',
+    #          verticalalignment='top', multialignment='center')
+
+    plt.plot(average_data[:len(average_data) // 2], "b", label="Sham Condition")
+    plt.plot(average_data[len(average_data) // 2:], "r", label="Experimental Condition")
+    # plt.plot(average_data)         # for debugging to plot whole line
+
+    # plt.title('Running Mean')
+    plt.ylabel('%  of Correct Responses')
+    plt.xlabel('Runs')
+    plt.legend(loc='lower left')
     plt.show()
     return
 
@@ -169,15 +223,13 @@ def barplot_mean_block(mean_block_measure, block_error):
 
 
 def plot_cond_measure(cond_measure):
-    x = len(cond_measure)
-    x_axis = np.arange(x)
-    y = cond_measure
+    x = np.arange(len(cond_measure))
+    x = [x + 1 for x in x]
+    y = cond_measure.mean(axis=1).to_list()
 
-    plt.bar(x_axis - 0.2, y[0], 0.4, label="Remember Stimulus 1")
-    plt.bar(x_axis + 0.2, y[1], 0.4, label="Remember Stimulus 2")
+    plt.bar(x, y)
 
-    x_axis = [x + 1 for x in x_axis]
-    plt.xticks(range(x), x_axis)
+    plt.xticks(x)
     plt.ylim(ymin=0, ymax=0.8)
 
     plt.xlabel("Participants")
