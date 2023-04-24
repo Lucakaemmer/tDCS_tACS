@@ -6,7 +6,7 @@ TRIALS = list(range(0, 288))
 
 RUNS = list(range(1, 13))
 
-DATA_PATH = "/Users/lucakammer/Documents/Academia/Uni_BerlinFU/Semester3/Master_Thesis/Data"
+DATA_PATH = "/Users/luca/Desktop/tDCS_TWMD/Outputs"
 
 COL_NAMES = ['Trial Onset', 'Trial Duration', 'Trial Type', 'Stimulus Set', 'Stimulus 1', 'Stimulus 2', 'Stimulus 3',
              'Stimulus 4', 'WM delay', 'ITI', 'Timing', 'Keypress', 'Response', 'Too late', 'RT', 'Run']
@@ -20,12 +20,12 @@ EXCLUDE = [20, 26]
 #                                   Plotting
 # =============================================================================
 
-ACCURACIES_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/accuracies.csv"
-COND_ACC_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/cond_accuracies.csv"
-RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/RTs.csv"
-COND_RTs_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/cond_RTs.csv"
-ACC_UNSHIFTED_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/accuracies_unshifted.csv"
-TRIAL_AVERAGE_PATH = "/Users/lucakammer/Documents/GitHub/tDCS_tACS/data_analysis/data/trials_average.csv"
+ACCURACIES_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/accuracies.csv"
+COND_ACC_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/cond_accuracies.csv"
+RTs_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/RTs.csv"
+COND_RTs_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/cond_RTs.csv"
+ACC_UNSHIFTED_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/accuracies_unshifted.csv"
+TRIAL_AVERAGE_PATH = "/Users/luca/Documents/GitHub/tDCS_tACS/data_analysis/data/trials_average.csv"
 
 TRIAL_DISTANCE = [24.5, 48.5, 72.5, 96.5, 120.5, 144.5, 168.5, 192.5, 216.5, 240.5, 264.5]
 RUNS_PLOT = [2.5, 4.5, 6.5, 8.5, 10.5]

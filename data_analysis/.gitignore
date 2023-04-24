@@ -131,3 +131,5 @@ fabric.properties
 .idea/*
 
 .data/*
+
+.venv/*
